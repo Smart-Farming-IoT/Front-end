@@ -1,0 +1,199 @@
+<template>
+    <section class=" min-w-screen min-h-screen  bg-blue-100 bg-opacity-30 container px-8 py-8 mx-auto  ">
+        <div class="container  mx-auto flex flex-col container items-stretch px-5 py-5   rounded-3">
+            <h1 class="text-4xl  font-bold">My To Do List</h1>
+            <div class="container flex items-center  mb-6 mt-6 ">
+                <input v-model="newTodo" type="text" placeholder="Enter To Do"
+                    class="items-center  appearance-none border shadow-lg rounded-lg w-4/6 py-4 px-3 mr-4 text-grey-darker" />
+                <button type="submit" @click="addTodo()">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class=" mb-6 mt-6 rounded-full shadow-xl bg-red-400 text-white p-3 w-14 h-14  inline-block"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </button>
+            </div>
+            <div class="font-medium  text-lg flex-wrap flex justify-between  w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-red-400 px-4 py-6 mb-6"
+                v-for="(todo, index) in todos" :key="index">
+                <div class=" p-2   md:w-2/6  w-full">
+                    <h5 :class="{ 'line-through': todo.status === 'finished' }">
+                        {{ todo.name }}
+                    </h5>
+                </div>
+                <div class="col-span-2 pl-64">
+                    <div class="flex flex-wrap ">
+                        <!-- วงกลม  -->
+                        <div class="status-indicator mr-2 mt-3.5" :class="{
+                            'status-indicator-todo': todo.status === 'to-do',
+                            'status-indicator-ongoing': todo.status === 'on-going',
+                            'status-indicator-finished': todo.status === 'finished',
+                        }"></div>
+                        <!-- Text -->
+                        <div class="font-semibold text-xl" @click="changeStatus(index)" :class="{
+                            'status-text-todo': todo.status === 'to-do',
+                            'status-text-ongoing': todo.status === 'on-going',
+                            'status-text-finished': todo.status === 'finished',
+                        }">
+                            <button>
+                                <h5 class="font-semibold text-xl">{{ todo.status }}</h5>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-3 ">
+                    <div class="flex space-x-6 space-x-reverse justify-end">
+                        <div class="flex space-x-6 space-x-reverse" @click="upTodo(index)">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7l4-4m0 0l4 4m-4-4v18" />
+                            </svg>
+                            <i class="uil uil-arrow-up ms-4 "></i>
+                        </div>
+                        <div class="" @click="downTodo(index)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-4 4m0 0l-4-4m4 4V3" />
+                            </svg>
+                            <i class="uil uil-arrow-down ms-4"></i>
+                        </div>
+                        <div class="" @click="editTodo(index)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            <i class="uil uil-edit-alt ms-4"></i>
+                        </div>
+                        <div class="" @click="deleteTodo(index)">
+                            <i class="uil uil-trash-alt ms-4"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script>
+export default {
+    name: "ToDo",
+
+    data() {
+        return {
+            newTodo: "",
+            indexEditTodo: null,
+            tempNameTodo: "",
+            tempStatusTodo: "",
+            todoStatus: ["to-do", "on-going", "finished"],
+            todos: [
+                {
+                    name: "ไปปลูกต้นไม้เพิ่ม",
+                    status: "to-do",
+                },
+                {
+                    name: "เช้ารดน้ำ เปลี่ยนหน้าดิน",
+                    status: "finished",
+                },
+                {
+                    name: "ปิดน้ำตอนเย็น",
+                    status: "on-going",
+                },
+            ],
+        };
+    },
+
+    methods: {
+        addTodo() {
+            if (this.newTodo.length === 0) return;
+
+            if (this.indexEditTodo === null) {
+                this.todos.push({
+                    name: this.newTodo,
+                    status: "to-do",
+                });
+            } else {
+                this.todos[this.indexEditTodo].name = this.newTodo;
+                this.indexEditTodo = null;
+            }
+
+            this.newTodo = "";
+        },
+        editTodo(index) {
+            this.newTodo = this.todos[index].name;
+            this.indexEditTodo = index;
+        },
+        deleteTodo(index) {
+            this.todos.splice(index, 1);
+        },
+        changeStatus(index) {
+            let statusIndex = this.todoStatus.indexOf(this.todos[index].status);
+
+            if (++statusIndex > 2) statusIndex = 0;
+            this.todos[index].status = this.todoStatus[statusIndex];
+        },
+        upTodo(index) {
+            if (index === 0) return;
+
+            this.tempNameTodo = this.todos[index].name;
+            this.tempStatusTodo = this.todos[index].status;
+
+            this.todos[index].name = this.todos[index - 1].name;
+            this.todos[index].status = this.todos[index - 1].status;
+
+            this.todos[index - 1].name = this.tempNameTodo;
+            this.todos[index - 1].status = this.tempStatusTodo;
+        },
+        downTodo(index) {
+            if (index === this.todos.length - 1) return;
+
+            this.tempNameTodo = this.todos[index].name;
+            this.tempStatusTodo = this.todos[index].status;
+
+            this.todos[index].name = this.todos[index + 1].name;
+            this.todos[index].status = this.todos[index + 1].status;
+
+            this.todos[index + 1].name = this.tempNameTodo;
+            this.todos[index + 1].status = this.tempStatusTodo;
+        },
+    },
+};
+</script>
+
+<style scoped>
+/* สีที่เพิ่มมา */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-indicator-todo {
+    background: red;
+}
+
+.status-indicator-ongoing {
+    background: orange;
+}
+
+.status-indicator-finished {
+    background: green;
+}
+
+.status-text-todo {
+    color: red;
+}
+
+.status-text-ongoing {
+    color: orange;
+}
+
+.status-text-finished {
+    color: green;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <navbarleft child_component="aboutiot" />
+  <navbarleft child_component="todolist" />
 </template>
 <script>
 export default {

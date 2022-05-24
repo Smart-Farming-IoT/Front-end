@@ -1,6 +1,5 @@
 <template >
-  <div class="">
-    <!-- มันคือ dashboard เดี่ยวแก้ -->
+  <div>
     <section class=" flex bg-slate-100 text-gray-600 body-font">
       <div class="container px-5 py-24 mx-auto">
         <h1 class="sm:text-3xl text-2xl font-medium title-font text-center text-red-600 mb-20">Test tailwind
@@ -74,7 +73,6 @@
           </div>
         </div>
       </div>
-
     </section>
   </div>
 </template>

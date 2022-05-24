@@ -1,5 +1,5 @@
 <template >
-  <navbarleft child_component="homehelper" />
+  <navbarleft child_component="dashboard" />
 </template>
 
 <script>

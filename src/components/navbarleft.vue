@@ -15,9 +15,17 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
           </svg>
           <span class=" text-white  group-hover:text-gray-900 text-lg ">DASHBOARD</span>
+        </a>
+        <a href="/todo"
+          class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span class=" text-white  group-hover:text-gray-900 text-lg ">TO-DO LIST</span>
         </a>
         <a href="/about"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
@@ -46,7 +54,6 @@
             stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-
         </button>
         <a href="/team"
           class="group flex items-center space-x-2 py-3 px-4 text-black hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
@@ -58,7 +65,7 @@
           <span class=" text-black  group-hover:text-gray-900 text-lg">UA</span>
         </a>
       </div>
-      <div class="bg-slate-100">
+      <div class="bg-blue-100 bg-opacity-30">
         <!-- component -->
         <component :is="child_component"></component>
       </div>
@@ -72,11 +79,17 @@ import { ref } from "vue";
 // import HelloWorld from "./HelloWorld.vue";
 import homehelper from "../components/homehelper.vue"
 import teammember from "../components/teammember.vue";
+import aboutiot from "../components/aboutiot.vue";
+import dashboard from "../components/dashboard.vue";
+import todolist from "../components/todolist.vue";
 
 export default {
   components: {
     homehelper,
-    teammember
+    teammember,
+    aboutiot,
+    dashboard,
+    todolist
   },
   props: [
     'child_component'

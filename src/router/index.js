@@ -1,19 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import homedashboard from '../views/homedashboard.vue'
-// import Sidebar from '../views/Sidebar.vue'
 import team from '../views/team.vue'
 import about from '../views/about.vue'
+import todo from '../views/todo.vue'
+
 const routes = [
   {
     path: '/',
     name: 'homedashboard',
     component: homedashboard
   },
-  // {
-  //   path: '/',
-  //   name: 'sidebar',
-  //   component: Sidebar
-  // },
   {
     path: '/team',
     name: 'team',
@@ -23,6 +19,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: about
+  },
+  {
+    path: '/todo',
+    name: 'todo',
+    component: todo
   }
 
 ]
