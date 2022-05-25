@@ -57,8 +57,7 @@
                             <i class="uil uil-arrow-down ms-4"></i>
                         </div>
 
-                        <div :class="{ 'text-red-600': todo.status === 'finished' }"
-                            class=" focus:outline-none  hover:text-red-600" @click="editTodo(index)">
+                        <div class=" focus:outline-none  hover:text-red-600" @click="editTodo(index)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -83,92 +82,140 @@
 
 <script>
 
+const axios = require("axios");
+
 export default {
     note: "ToDo",
-
+    created() {
+        var userId = '0';
+        axios.get(this.firebaseBase + this.apiBase + '/to-do/' + userId)
+        .then(resp => {
+            console.log(resp.data.to_do_list);
+            this.todos = resp.data.to_do_list;
+        });
+    },
     data() {
         return {
             newTodo: "",
             indexEditTodo: null,
+            order:"",
             tempNameTodo: "",
             tempStatusTodo: "",
             todoStatus: ["to-do", "on-going", "finished"],
-            todos: [
-                {
-                    note: "ไปปลูกต้นไม้เพิ่ม",
-                    status: "to-do",
-                },
-                {
-                    note: "เช้ารดน้ำ เปลี่ยนหน้าดิน",
-                    status: "finished",
-                },
-                {
-                    note: "ปิดน้ำตอนเย็น",
-                    status: "on-going",
-                },
-            ],
+            // body:  ["note", "status"],
+            todos: [],
         };
     },
 
     methods: {
         addTodo() {
             if (this.newTodo.length === 0) return;
-
             if (this.indexEditTodo === null) {
-                this.todos.push({
-                    note: this.newTodo,
-                    status: "to-do",
+                axios.post(this.firebaseBase + this.apiBase + '/to-do', {
+                    "note": this.newTodo,
+                    "status": "to-do",
+                    "order": this.todos.length + 1,
+                    "user_id": "0",
+                })
+                .then(resp => {
+                    this.todos.push({
+                        "id": resp.data.id,
+                        "note": this.newTodo,
+                        "status": "to-do",
+                        "order": this.todos.length + 1,
+                    });
+                    this.newTodo = "";
+                })
+                .catch(resp => {
+                    console.log(resp)
                 });
             } else {
-                this.todos[this.indexEditTodo].note = this.newTodo;
-                this.indexEditTodo = null;
+                axios.put(this.firebaseBase + this.apiBase + '/to-do/' + this.todos[this.indexEditTodo].id, {
+                    "note": this.newTodo,
+                })
+                .then(resp => {
+                    this.todos[this.indexEditTodo].note = this.newTodo;
+                    this.indexEditTodo = null;
+                    this.newTodo = "";
+                })
+                .catch(resp => {
+                    console.log(resp)
+                });
             }
-
-            this.newTodo = "";
         },
         editTodo(index) {
             this.newTodo = this.todos[index].note;
             this.indexEditTodo = index;
         },
         deleteTodo(index) {
-            this.todos.splice(index, 1);
+            console.log(index)
+            axios.delete(this.firebaseBase + this.apiBase + '/to-do/' + this.todos[index].id)
+            .then(resp => {
+                console.log(resp)
+                this.todos.splice(index, 1);
+            })
+            .catch(resp => {
+                console.log(resp)
+            });
         },
         changeStatus(index) {
             let statusIndex = this.todoStatus.indexOf(this.todos[index].status);
-
             if (++statusIndex > 2) statusIndex = 0;
-            this.todos[index].status = this.todoStatus[statusIndex];
+            
+            axios.put(this.firebaseBase + this.apiBase + '/to-do/' + this.todos[index].id, {
+                "status": this.todoStatus[statusIndex],
+            })
+            .then(resp => {
+                console.log(resp)
+                this.todos[index].status = this.todoStatus[statusIndex];
+            })
+            .catch(resp => {
+                console.log(resp)
+            });
         },
         upTodo(index) {
             if (index === 0) return;
+            axios.post(this.firebaseBase + this.apiBase + '/to-do/up/' + this.todos[index].id)
+            .then(resp => {
+                this.tempNameTodo = this.todos[index].note;
+                this.tempStatusTodo = this.todos[index].status;
+                this.tempIdTodo = this.todos[index].id;
 
-            this.tempNameTodo = this.todos[index].note;
-            this.tempStatusTodo = this.todos[index].status;
+                this.todos[index].note = this.todos[index - 1].note;
+                this.todos[index].status = this.todos[index - 1].status;
+                this.todos[index].id = this.todos[index - 1].id;
 
-            this.todos[index].note = this.todos[index - 1].note;
-            this.todos[index].status = this.todos[index - 1].status;
-
-            this.todos[index - 1].note = this.tempNameTodo;
-            this.todos[index - 1].status = this.tempStatusTodo;
+                this.todos[index - 1].note = this.tempNameTodo;
+                this.todos[index - 1].status = this.tempStatusTodo;
+                this.todos[index - 1].id = this.tempIdTodo;
+            })
+            .catch(resp => {
+                console.log(resp)
+            });
         },
         downTodo(index) {
+            axios.post(this.firebaseBase + this.apiBase + '/to-do/down/' + this.todos[index].id)
+            .then(resp => {
+                this.tempNameTodo = this.todos[index].note;
+                this.tempStatusTodo = this.todos[index].status;
+
+                this.todos[index].note = this.todos[index + 1].note;
+                this.todos[index].status = this.todos[index + 1].status;
+
+                this.todos[index + 1].note = this.tempNameTodo;
+                this.todos[index + 1].status = this.tempStatusTodo;
+            })
+            .catch(resp => {
+                console.log(resp)
+            });
             if (index === this.todos.length - 1) return;
-
-            this.tempNameTodo = this.todos[index].note;
-            this.tempStatusTodo = this.todos[index].status;
-
-            this.todos[index].note = this.todos[index + 1].note;
-            this.todos[index].status = this.todos[index + 1].status;
-
-            this.todos[index + 1].note = this.tempNameTodo;
-            this.todos[index + 1].status = this.tempStatusTodo;
         },
     },
 };
 </script>
 
 <style scoped>
-/* สีที่เพิ่มมา */
+
 .status-indicator {
     width: 8px;
     height: 8px;
