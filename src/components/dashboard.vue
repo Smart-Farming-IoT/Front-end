@@ -11,7 +11,7 @@
                                 class="rounded-full bg-pink-400 text-white p-4 w-20 h-20 mb-3 inline-block"
                                 src="@/assets/Iot/meter.png">
                         </div>
-                        <h2 class="title-font font-medium text-3xl text-gray-900">{{ 87.50 }}</h2>
+                        <h2 class="title-font font-medium text-3xl text-gray-900">{{ this.soilMoisture }}</h2>
                         <h2 class="title-font font-medium text-2xl text-gray-600">Soil Moisture</h2>
                         <p class="leading-relaxed text-gray-600">Soil Moisture Content</p>
                     </div>
@@ -25,7 +25,7 @@
                                 class="rounded-full bg-green-400 text-white p-4 w-20 h-20 mb-3 inline-block"
                                 src="@/assets/Iot/phbalance.png">
                         </div>
-                        <h2 class="title-font font-medium text-3xl text-gray-900">{{ 5.8 }}</h2>
+                        <h2 class="title-font font-medium text-3xl text-gray-900">{{ this.phLevel }}</h2>
                         <h2 class="title-font font-medium text-2xl text-gray-600">PH Level</h2>
                         <p class="leading-relaxed text-gray-600">Water PH level</p>
                     </div>
@@ -39,7 +39,7 @@
                                 class="rounded-full bg-yellow-400 text-white p-4 w-20 h-20 mb-3 inline-block"
                                 src="@/assets/Iot/sun.png">
                         </div>
-                        <h2 class="title-font font-medium text-3xl text-gray-900">{{ LOW }}</h2>
+                        <h2 class="title-font font-medium text-3xl text-gray-900">{{ this.ambientLight }}</h2>
                         <h2 class="title-font font-medium text-2xl text-gray-600">Ambient light</h2>
                         <p class="leading-relaxed text-gray-600">Ambient light Content</p>
                     </div>
@@ -99,17 +99,24 @@
 
 <script>
 
-export default {
+const axios = require("axios");
 
+export default {
+    created() {
+        this.soilMoisture = 58.5
+        this.phLevel = 7.2
+        this.ambientLight = 'HIGH'
+    },
     data() {
         return {
             message: 'Test',
+            soilMoisture: 0,
+            phLevel: 0,
+            ambientLight: 'LOW',
             toggle: true,
             toggle2: true
         };
-    },
-
-
+    }
 };
 </script>
 
