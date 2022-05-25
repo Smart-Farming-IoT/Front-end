@@ -13,16 +13,16 @@
                     </svg>
                 </button>
             </div>
+
             <div class="font-medium  text-lg flex-wrap flex justify-between  w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-red-400 px-4 py-6 mb-6"
                 v-for="(todo, index) in todos" :key="index">
                 <div class=" p-2   md:w-2/6  w-full">
                     <h5 :class="{ 'line-through': todo.status === 'finished' }">
-                        {{ todo.name }}
+                        {{ todo.note }}
                     </h5>
                 </div>
                 <div class="col-span-2 pl-64">
                     <div class="flex flex-wrap ">
-                        <!-- วงกลม  -->
                         <div class="status-indicator mr-2 mt-3.5" :class="{
                             'status-indicator-todo': todo.status === 'to-do',
                             'status-indicator-ongoing': todo.status === 'on-going',
@@ -42,22 +42,23 @@
                 </div>
                 <div class="col-span-3 ">
                     <div class="flex space-x-6 space-x-reverse justify-end">
-                        <div class="flex space-x-6 space-x-reverse" @click="upTodo(index)">
-
+                        <div class="hover:text-red-600 flex space-x-6 space-x-reverse" @click="upTodo(index)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7l4-4m0 0l4 4m-4-4v18" />
                             </svg>
                             <i class="uil uil-arrow-up ms-4 "></i>
                         </div>
-                        <div class="" @click="downTodo(index)">
+                        <div class="hover:text-red-600" @click="downTodo(index)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-4 4m0 0l-4-4m4 4V3" />
                             </svg>
                             <i class="uil uil-arrow-down ms-4"></i>
                         </div>
-                        <div class="" @click="editTodo(index)">
+
+                        <div :class="{ 'text-red-600': todo.status === 'finished' }"
+                            class=" focus:outline-none  hover:text-red-600" @click="editTodo(index)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -65,7 +66,7 @@
                             </svg>
                             <i class="uil uil-edit-alt ms-4"></i>
                         </div>
-                        <div class="" @click="deleteTodo(index)">
+                        <div class="hover:text-red-600" @click="deleteTodo(index)">
                             <i class="uil uil-trash-alt ms-4"></i>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
@@ -81,8 +82,9 @@
 </template>
 
 <script>
+
 export default {
-    name: "ToDo",
+    note: "ToDo",
 
     data() {
         return {
@@ -93,15 +95,15 @@ export default {
             todoStatus: ["to-do", "on-going", "finished"],
             todos: [
                 {
-                    name: "ไปปลูกต้นไม้เพิ่ม",
+                    note: "ไปปลูกต้นไม้เพิ่ม",
                     status: "to-do",
                 },
                 {
-                    name: "เช้ารดน้ำ เปลี่ยนหน้าดิน",
+                    note: "เช้ารดน้ำ เปลี่ยนหน้าดิน",
                     status: "finished",
                 },
                 {
-                    name: "ปิดน้ำตอนเย็น",
+                    note: "ปิดน้ำตอนเย็น",
                     status: "on-going",
                 },
             ],
@@ -114,18 +116,18 @@ export default {
 
             if (this.indexEditTodo === null) {
                 this.todos.push({
-                    name: this.newTodo,
+                    note: this.newTodo,
                     status: "to-do",
                 });
             } else {
-                this.todos[this.indexEditTodo].name = this.newTodo;
+                this.todos[this.indexEditTodo].note = this.newTodo;
                 this.indexEditTodo = null;
             }
 
             this.newTodo = "";
         },
         editTodo(index) {
-            this.newTodo = this.todos[index].name;
+            this.newTodo = this.todos[index].note;
             this.indexEditTodo = index;
         },
         deleteTodo(index) {
@@ -140,25 +142,25 @@ export default {
         upTodo(index) {
             if (index === 0) return;
 
-            this.tempNameTodo = this.todos[index].name;
+            this.tempNameTodo = this.todos[index].note;
             this.tempStatusTodo = this.todos[index].status;
 
-            this.todos[index].name = this.todos[index - 1].name;
+            this.todos[index].note = this.todos[index - 1].note;
             this.todos[index].status = this.todos[index - 1].status;
 
-            this.todos[index - 1].name = this.tempNameTodo;
+            this.todos[index - 1].note = this.tempNameTodo;
             this.todos[index - 1].status = this.tempStatusTodo;
         },
         downTodo(index) {
             if (index === this.todos.length - 1) return;
 
-            this.tempNameTodo = this.todos[index].name;
+            this.tempNameTodo = this.todos[index].note;
             this.tempStatusTodo = this.todos[index].status;
 
-            this.todos[index].name = this.todos[index + 1].name;
+            this.todos[index].note = this.todos[index + 1].note;
             this.todos[index].status = this.todos[index + 1].status;
 
-            this.todos[index + 1].name = this.tempNameTodo;
+            this.todos[index + 1].note = this.tempNameTodo;
             this.todos[index + 1].status = this.tempStatusTodo;
         },
     },
