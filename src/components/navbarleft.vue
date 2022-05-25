@@ -1,8 +1,8 @@
 <template>
   <div class="relative md:block lg:flex min-h-screen">
     <!-- <div class="bg-gray-900 text-white w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 md:relative md:-translate-x-0 transform -translate-x-full  transition duration-200 ease-in-out" -->
-    <div class="bg-gray-900 text-white lg:w-64 space-y-6 px-2 py-4 inset-y-0 left-0 relative"  
-      :class="{'block': showFullNavbarFlag, 'hidden': !showFullNavbarFlag}">
+    <div class="bg-gray-900 text-white lg:w-64 space-y-6 px-2 py-4 inset-y-0 left-0 relative"
+      :class="{ 'block': showFullNavbarFlag, 'hidden': !showFullNavbarFlag }">
       <a href="/" @click="homehelper = null" class="flex items-center space-x-2 px-4">
         <img alt="content" class="h-12 w-12" src="@/assets/Iot/watering.png">
         <span class="text-xl font-extrabold text-white">IoT Smart Farming</span>
@@ -99,16 +99,16 @@ export default {
       showFullNavbarFlags,
     }
   },
-    data() {
-        return {
-            showFullNavbarFlag: true
-        };
-    },
-    methods: {
-        handle_collapse() {
-            this.showFullNavbarFlag = !this.showFullNavbarFlag;
-        }
+  data() {
+    return {
+      showFullNavbarFlag: true
+    };
+  },
+  methods: {
+    handle_collapse() {
+      this.showFullNavbarFlag = !this.showFullNavbarFlag;
     }
+  }
 
 };
 </script>
