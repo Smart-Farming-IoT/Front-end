@@ -24,6 +24,9 @@ jobs:
 # #        run: |
 # #           touch .env
 # #           echo VUE_APP_API=${{ secrets.VUE_APP_API }} >> .env
+     - name: npm install, build, and test
+       run: |
+          npm install
           
      - name: Build image and push Dockerfile
        uses: docker/build-push-action@v2
