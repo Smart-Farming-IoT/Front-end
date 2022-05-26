@@ -3,6 +3,7 @@ WORKDIR /app
 RUN yarn install
 COPY package*.json ./
 COPY ./ .
+RUN yarn serve
 RUN yarn build
 
 FROM nginx as production-stage
