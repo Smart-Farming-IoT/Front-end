@@ -1,4 +1,4 @@
-FROM node:lts-alpine as build-stage
+FROM alpine:3.14 as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN yarn install
