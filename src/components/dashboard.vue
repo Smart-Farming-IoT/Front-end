@@ -27,7 +27,7 @@
                         </div>
                         <h2 class="title-font font-medium text-3xl text-gray-900">{{ this.phLevel }}</h2>
                         <h2 class="title-font font-medium text-2xl text-gray-600">PH Level</h2>
-                        <p class="leading-relaxed text-gray-600">Water PH level</p>
+                        <p class="leading-relaxed text-gray-600">Water PH Level</p>
                     </div>
                 </div>
                 <!-- Ambient light -->
@@ -40,8 +40,8 @@
                                 src="@/assets/Iot/sun.png">
                         </div>
                         <h2 class="title-font font-medium text-3xl text-gray-900">{{ this.ambientLight }}</h2>
-                        <h2 class="title-font font-medium text-2xl text-gray-600">Ambient light</h2>
-                        <p class="leading-relaxed text-gray-600">Ambient light Content</p>
+                        <h2 class="title-font font-medium text-2xl text-gray-600">Ambient Light</h2>
+                        <p class="leading-relaxed text-gray-600">Ambient Light Content</p>
                     </div>
                 </div>
                 <!-- ON / OFF -->
