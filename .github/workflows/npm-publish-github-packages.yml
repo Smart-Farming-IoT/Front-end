@@ -1,0 +1,60 @@
+name: Front-end
+
+on:
+ push: 
+  branches:
+     - main 
+ 
+jobs: 
+   build:
+     runs-on: ubuntu-latest
+     
+     steps:
+     - name: Checkout code
+       uses: actions/checkout@v2
+      
+     - name: Login to Github registry ghcr
+       uses: docker/login-action@v1
+       with:
+         registry: ghcr.io
+         username: ${{ github.repository_owner }}
+         password: ${{ secrets.SMART_FARMING_TOKEN }}
+             
+# #      - name: Create env file
+# #        run: |
+# #           touch .env
+# #           echo VUE_APP_API=${{ secrets.VUE_APP_API }} >> .env
+          
+#      - name: Build image and push Dockerfile
+#        uses: docker/build-push-action@v2
+#        with:
+#          file: ./Dockerfile
+#          context: .
+#          push: true
+#          build-args: API_URL=${{ secrets.VUE_APP_API }} 
+#          tags: ghcr.io/smartfarming/front-end:main
+   
+#      - name: Publish compose file
+#        uses: appleboy/ssh-action@master
+#        with: 
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          source: .
+#          target: .
+    
+#    deploy:
+#       needs: build
+#       runs-on: ubuntu-latest
+#       steps:
+      
+#       - name: Deploy execute command ssh to remote server
+#         uses: appleboy/ssh-action@master
+#         with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          script: |
+#            docker-compose down 
+#            docker pull ghcr.io/smartfarming/front-end:main 
+#            docker-compose up -d 
