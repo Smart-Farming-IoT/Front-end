@@ -1,6 +1,6 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
-RUN yarn install -g @vue/cli@latest
+RUN yarn global add @vue/cli@latest
 COPY package*.json ./
 COPY ./ .
 RUN yarn build
