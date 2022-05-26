@@ -1,6 +1,7 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY ./ .
+RUN npm install -g yarn 
 RUN yarn install && yarn build
 
 FROM nginx as production-stage
