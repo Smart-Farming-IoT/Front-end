@@ -4,7 +4,7 @@
         <h2 class=" pt-2 pl-4  title-font text-4xl  font-bold">Team Members</h2>
         <!-- Roles just change -->
       <div class="flex pb-2 flex-wrap justify-center">
-        <div class="max-w-md  py-4 px-8 bg-white shadow-lg rounded-lg my-20 p-4 lg:w-1/4 md:w-1/2">
+        <div class="mx-2 max-w-md  py-4 px-8 bg-white shadow-lg rounded-lg my-20 p-4 lg:w-1/4 md:w-1/2">
           <div class="h-full   flex flex-col items-center text-center">
             <img class="rounded-t-lg border-2 border-green-500" src="@/assets/Team/074.jpg">
             <div class="pt-4 w-full">
@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <div class="mx-8 max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20 p-4 lg:w-1/4 md:w-1/2">
+        <div class="mx-2 max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20 p-4 lg:w-1/4 md:w-1/2">
           <div class="h-full flex flex-col items-center text-center">
             <img class="rounded-t-lg border-2 border-indigo-500" src="@/assets/Team/079.jpg">
             <div class="pt-4 w-full">
@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <div class="max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20 p-4 lg:w-1/4 md:w-1/2">
+        <div class="mx-2 max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20 p-4 lg:w-1/4 md:w-1/2">
           <div class="h-full flex flex-col items-center text-center">
             <img class="rounded-t-lg border-2 border-blue-500" src="@/assets/Team/090.jpg">
             <div class="pt-4 w-full">
