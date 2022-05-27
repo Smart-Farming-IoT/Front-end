@@ -21,7 +21,7 @@
                         {{ todo.note }}
                     </h5>
                 </div>
-                <div class="col-span-2 pl-64">
+                <div class=" col-span-2 pl-52">
                     <div class="flex flex-wrap ">
                         <div class="status-indicator mr-2 mt-3.5" :class="{
                             'status-indicator-todo': todo.status === 'to-do',
@@ -34,9 +34,11 @@
                             'status-text-ongoing': todo.status === 'on-going',
                             'status-text-finished': todo.status === 'finished',
                         }">
-                            <button>
-                                <h5 class="font-semibold text-xl">{{ todo.status }}</h5>
-                            </button>
+                            <div class="flex flex-wrap">
+                                <button>
+                                    <h5 class="font-semibold text-xl">{{ todo.status }}</h5>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
