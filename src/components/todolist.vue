@@ -21,7 +21,7 @@
                         {{ todo.note }}
                     </h5>
                 </div>
-                <div class=" col-span-2 pl-52">
+                <div class=" col-span-2 pl-32">
                     <div class="flex flex-wrap ">
                         <div class="status-indicator mr-2 mt-3.5" :class="{
                             'status-indicator-todo': todo.status === 'to-do',
