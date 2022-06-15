@@ -63,9 +63,7 @@ jobs:
          password: ${{ secrets.PASSWORD }}
          script: |
            cd Front-end
-           ls -la
            docker-compose -f ./docker-compose.yml down 
            docker pull pungpeee19/smart_farming:latest
            docker-compose -f ./docker-compose.yml up -d 
-           docker ps -a
            
