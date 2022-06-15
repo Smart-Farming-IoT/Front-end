@@ -62,6 +62,6 @@ jobs:
          username: ${{ secrets.USERNAME }}
          password: ${{ secrets.PASSWORD }}
          script: |
-           docker-compose down 
+           docker-compose -f docker-compose.yml down 
            docker pull pungpeee19/smart_farming:latest
-           docker-compose up -d 
+           docker-compose -f docker-compose.yml up -d 
