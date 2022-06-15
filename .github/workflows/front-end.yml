@@ -66,8 +66,3 @@ jobs:
            ls -la
            docker ps -a
            
-         #script: |
-           cd smart-farming
-           #docker-compose -f ./docker-compose.yml down 
-           docker pull pungpeee19/smart_farming:latest
-           docker-compose -f ./docker-compose.yml up -d 
