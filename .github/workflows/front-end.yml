@@ -30,13 +30,6 @@ jobs:
        with:
           push: true
           tags: pungpeee19/smart_farming:latest
-      
-#      - name: Login to Github registry ghcr
-#        uses: docker/login-action@v1
-#        with:
-#          registry: ghcr.io
-#          username: ${{ github.repository_owner }}
-#          password: ${{ secrets.SMART_FARMING_TOKEN }}
                    
      - name: Build image and push Dockerfile
        uses: docker/build-push-action@v3
@@ -57,18 +50,18 @@ jobs:
          source: .
          target: .
     
-#    deploy:
-#       needs: build
-#       runs-on: ubuntu-latest
-#       steps:
+   deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
       
-#       - name: Deploy execute command ssh to remote server
-#         uses: appleboy/ssh-action@master
-#         with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          password: ${{ secrets.PASSWORD }}
-#          script: |
-#            docker-compose down 
-#            docker pull ghcr.io/smartfarming/front-end:main 
-#            docker-compose up -d 
+      - name: Deploy execute command ssh to remote server
+        uses: appleboy/ssh-action@master
+        with:
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         password: ${{ secrets.PASSWORD }}
+         script: |
+           docker-compose down 
+           docker pull pungpeee19/smart_farming:latest
+           docker-compose up -d 
