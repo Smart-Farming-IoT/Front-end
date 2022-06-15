@@ -62,7 +62,10 @@ jobs:
          username: ${{ secrets.USERNAME }}
          password: ${{ secrets.PASSWORD }}
          script: |
-           cd smart-farming
+           cd Front-end
            ls -la
+           docker-compose -f ./docker-compose.yml down 
+           docker pull pungpeee19/smart_farming:latest
+           docker-compose -f ./docker-compose.yml up -d 
            docker ps -a
            
