@@ -3,6 +3,9 @@ import homedashboard from '../views/homedashboard.vue'
 import team from '../views/team.vue'
 import about from '../views/about.vue'
 import todo from '../views/todo.vue'
+import login from '../views/login.vue'
+import register from '../views/register.vue'
+import reset from '../views/reset.vue'
 
 const routes = [
   {
@@ -24,8 +27,22 @@ const routes = [
     path: '/todo',
     name: 'todo',
     component: todo
-  }
-
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: register
+  },  
+  {
+    path: '/reset',
+    name: 'reset',
+    component: reset
+  },  
 ]
 
 const router = createRouter({

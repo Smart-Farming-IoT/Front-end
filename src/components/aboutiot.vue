@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <!--  -->
-                <section class="bg-white shadow-lg  text-gray-600 body-font pb-6">
+                <section class="bg-white shadow-lg   text-gray-600 body-font pb-6">
                     <div class="container pt-6  py-8 mx-auto">
 
                         <div class="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
