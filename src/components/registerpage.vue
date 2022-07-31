@@ -1,5 +1,4 @@
 <template>
-
     <div class="min-w-screen min-h-screen bg-blue-100 bg-opacity-30 flex items-center justify-center px-5 py-5">
         <div class="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden" style="max-width:1000px">
             <div class="md:flex w-full">
@@ -85,7 +84,8 @@
                 <div class="w-full md:w-1/2 py-10 px-5 md:px-10">
                     <div class="text-center mb-10">
                         <h1 class="font-bold text-3xl text-gray-900">Welcome</h1>
-                        <h1 class="font-medium text-xl text-gray-700">  Join <span class="text-indigo-600">IOT</span>  Smart farming </h1>
+                        <h1 class="font-medium text-xl text-gray-700"> Join <span class="text-indigo-600">IOT</span>
+                            Smart farming </h1>
                         <p>Enter your information to register</p>
                     </div>
                     <div>
