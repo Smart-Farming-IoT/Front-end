@@ -44,7 +44,8 @@
           <span class=" text-white  group-hover:text-gray-900 text-lg">TEAM</span>
         </a>
         <!--  -->
-        <a href="/login"
+        <div v-if="!user">
+        <router-link to="/login"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
@@ -52,8 +53,8 @@
               d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
           </svg>
           <span class=" text-white  group-hover:text-gray-900 text-lg">LOGIN</span>
-        </a>
-        <a href="/register"
+        </router-link>
+        <router-link to="/register"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
@@ -61,7 +62,19 @@
               d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           <span class=" text-white  group-hover:text-gray-900 text-lg">REGISTER</span>
+        </router-link>
+        </div>
+        <div v-if="user">
+         <a href='javascript:void(0)' @click="handleClick"
+          class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+          <span class=" text-white  group-hover:text-gray-900 text-lg">LOGOUT</span>
         </a>
+        </div>
         <a href="/profile"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -71,7 +84,7 @@
           </svg>
           <span class=" text-white  group-hover:text-gray-900 text-lg">TEST PROFILE</span>
         </a>
-        <a href="/editprofile"
+        <router-link to="/editprofile"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
@@ -79,7 +92,7 @@
               d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           <span class=" text-white  group-hover:text-gray-900 text-lg">TEST EDIT</span>
-        </a>
+        </router-link>
         <!-- <a href="/reset"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -134,7 +147,11 @@ import resetpassword from "../components/resetpassword.vue";
 import myprofile from "../components/myprofile.vue";
 import editprofilepage from "../components/editprofilepage.vue";
 
+import {mapGetters} from 'vuex'
+
 export default {
+
+
   components: {
     homehelper,
     teammember,
@@ -148,7 +165,8 @@ export default {
     editprofilepage
   },
   props: [
-    'child_component'
+    'child_component',
+    'user'
   ],
   setup() {
     const showFullNavbarFlags = ref(false);
@@ -164,8 +182,17 @@ export default {
   methods: {
     handle_collapse() {
       this.showFullNavbarFlag = !this.showFullNavbarFlag;
+    },
+    handleClick(){
+      localStorage.removeItem('token');
+     this.$store.dispatch('user',null),
+      this.$router.push('/');
     }
+  },
+  computed:{
+    ...mapGetters(['user'])
   }
 
 };
 </script>
+

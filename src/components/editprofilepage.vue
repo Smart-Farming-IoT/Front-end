@@ -17,6 +17,10 @@
                 </p>
             </div>
             <div>
+                <!-- test -->
+                    <h3 v-if="user">Hi , {{user.first_name}}</h3>
+                    <h3 v-if="!user">Noooooooooooooooo user</h3>
+                <!--  -->
                 <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
                     <p class="text-gray-600">
                         First name
@@ -72,8 +76,38 @@
 </template>
 
 <script>
+
+// const axios = require("axios");
+import axios from "axios";
+
+
+import {mapGetters} from 'vuex'
+
+
 export default {
+
+   computed:{
+    ...mapGetters(['user'])
+  },
+     props: [
+    'users'
+  ],
     // name: "slideteam",
+      data() {
+    return {
+    user:null
+    };
+  },
+  //app.js
+    async created(){
+        const response = await axios.get('user' , {
+            headers:{
+                Authenticaton: 'Bearer' + localStorage.getItem('token')
+                //  this.user = response.data;
+                
+            }
+        },this.$store.dispatch('user',response.data))
+    }
 };
 </script>
 
