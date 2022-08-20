@@ -1,4 +1,7 @@
 <template>
+<main class="login">
+    <section class="forms">
+        <form class="register" @submit.prevent="register">
     <div class="min-w-screen min-h-screen bg-blue-100 bg-opacity-30 flex items-center justify-center px-5 py-5">
         <div class="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden" style="max-width:1000px">
             <div class="md:flex w-full">
@@ -97,7 +100,7 @@
                                         class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                         <i class="mdi mdi-account-outline text-gray-400 text-lg"></i>
                                     </div>
-                                    <input type="text"
+                                    <input type="firstname"  v-model="register_form.firstname"
                                         class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                                         placeholder="John">
                                 </div>
@@ -109,7 +112,7 @@
                                         class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                         <i class="mdi mdi-account-outline text-gray-400 text-lg"></i>
                                     </div>
-                                    <input type="text"
+                                    <input type="lastname"  v-model="register_form.lastname"
                                         class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                                         placeholder="Smith">
                                 </div>
@@ -124,9 +127,9 @@
                                         class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                         <i class="mdi mdi-email-outline text-gray-400 text-lg"></i>
                                     </div>
-                                    <input type="email"
+                                    <input type="email" placeholder="Email address" v-model="register_form.email"
                                         class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                        placeholder="Email address">
+                                       >
                                 </div>
                             </div>
                         </div>
@@ -138,9 +141,9 @@
                                         class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                         <i class="mdi mdi-lock-outline text-gray-400 text-lg"></i>
                                     </div>
-                                    <input type="password" id="password" name="password" autocomplete="current-password"
+                                    <input type="password" placeholder="Password" v-model="register_form.password" id="password" name="password" autocomplete="current-password"
                                         class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                        placeholder="************">
+                                        >
                                 </div>
                                 <div class="flex  pt-3 pl-56 ">
                                     <div class="text-sm  px-6 mb-6 ">
@@ -155,7 +158,7 @@
                         </div>
                         <div class="flex -mx-3 ">
                             <div class="w-full px-3 mb-5">
-                                <button
+                                <button type="submit" value="Register"
                                     class="block w-full max-w-xs mx-auto bg-indigo-500  hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold ">REGISTER</button>
                             </div>
                         </div>
@@ -182,12 +185,34 @@
             </a>
         </div>
     </div>
+        </form>
+    </section>
+    </main>
 </template>
 
 <script>
+import { ref } from 'vue'
+import { useStore } from 'vuex'
 export default {
-    // name: "slideteam",
-};
+	setup () {
+		const login_form = ref({});
+		const register_form = ref({});
+		const store = useStore();
+		const login = () => {
+			store.dispatch('login', login_form.value);
+		}
+		const register = () => {
+			store.dispatch('register', register_form.value);
+		}
+		return {
+			login_form,
+			register_form,
+			login,
+			register
+		}
+	}
+}
+
 </script>
 
 <style scoped>

@@ -62,6 +62,11 @@
           </svg>
           <span class=" text-white  group-hover:text-gray-900 text-lg">REGISTER</span>
         </a>
+        <!--  -->
+          <div id="nav" v-if="$store.state.user">
+    <button @click="$store.dispatch('logout')">Logout</button>
+  </div>
+        <!--  -->
         <a href="/profile"
           class="group flex items-center space-x-2 py-3 px-4 text-white hover:bg-white hover:bg-opacity-90  hover:text-gray-900 transition duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"

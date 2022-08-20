@@ -9,16 +9,24 @@ import reset from '../views/reset.vue'
 import profile from '../views/profile.vue'
 import editprofile from '../views/editprofile.vue'
 
+import { auth } from '../firebase'
+
 const routes = [
   {
     path: '/',
     name: 'homedashboard',
-    component: homedashboard
+    component: homedashboard,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/team',
     name: 'team',
-    component: team
+    component: team,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/about',
@@ -28,7 +36,10 @@ const routes = [
   {
     path: '/todo',
     name: 'todo',
-    component: todo
+    component: todo,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/login',
@@ -43,7 +54,7 @@ const routes = [
   {
     path: '/reset',
     name: 'reset',
-    component: reset
+    component: reset 
   },  
   {
     path: '/profile',
@@ -61,6 +72,23 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  console.log('1', to.path, from.path, auth.currentUser);
+  if (to.path === '/login' && auth.currentUser) {
+    next('/');
+    return;
+  }
+
+  console.log('2', to.path, from.path, auth.currentUser);
+  if (to.matched.some(record => record.meta.requiresAuth) && !auth.currentUser) {
+    next('/login');
+    return;
+  }
+
+  console.log('3', to.path, from.path, auth.currentUser);
+  next();
 })
 
 export default router
