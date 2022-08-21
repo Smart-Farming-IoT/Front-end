@@ -11,3 +11,4 @@ app.config.globalProperties.firebaseBase = "https://us-central1-iot-systems-1bd8
 app.config.globalProperties.apiBase = "/api/v1"
 app.component('navbarleft', navbarleft)
 app.use(store).use(router).mount('#app')
+router.store = store

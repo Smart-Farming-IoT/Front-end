@@ -8,7 +8,6 @@ import register from '../views/register.vue'
 import reset from '../views/reset.vue'
 import profile from '../views/profile.vue'
 import editprofile from '../views/editprofile.vue'
-
 import { auth } from '../firebase'
 
 const routes = [
@@ -75,20 +74,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log('1', to.path, from.path, auth.currentUser);
+  console.log(auth.currentUser)
   if (to.path === '/login' && auth.currentUser) {
     next('/');
     return;
   }
 
-  console.log('2', to.path, from.path, auth.currentUser);
   if (to.matched.some(record => record.meta.requiresAuth) && !auth.currentUser) {
     next('/login');
     return;
   }
 
-  console.log('3', to.path, from.path, auth.currentUser);
   next();
+
 })
 
 export default router
