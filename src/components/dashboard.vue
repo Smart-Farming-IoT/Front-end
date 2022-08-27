@@ -4,7 +4,7 @@
 			<h2 class=" pt-4 pl-4 title-font  text-4xl  font-bold">Dashboard</h2>
 			<div class=" flex flex-wrap pt-6 text-center  items-center justify-center ">
 				<!-- Soil Moisture -->
-				<div class=" p-4 md:w-1/4 sm:w-1/2 w-full">
+				<div class=" p-4 md:w-2/6 sm:w-1/2 w-full">
 					<div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-pink-400 px-4 py-6 ">
 						<div class="">
 							<img alt="content" class="rounded-full bg-pink-400 text-white p-4 w-20 h-20 mb-3 inline-block"
@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<!-- PH Level -->
-				<div class=" p-4 md:w-1/4 sm:w-1/2 w-full">
+				<div class=" p-4 md:w-2/6 sm:w-1/2 w-full">
 					<div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-green-400 px-4 py-6 ">
 						<div class="">
 							<img alt="content" class="rounded-full bg-green-400 text-white p-4 w-20 h-20 mb-3 inline-block"
@@ -28,7 +28,7 @@
 					</div>
 				</div>
 				<!-- Ambient light -->
-				<div class=" p-4 md:w-1/4 sm:w-1/2 w-full">
+				<div class=" p-4 md:w-2/6 sm:w-1/2 w-full">
 					<div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-yellow-400 px-4 py-6 ">
 						<div class="">
 							<img alt="content" class="rounded-full bg-yellow-400 text-white p-4 w-20 h-20 mb-3 inline-block"
