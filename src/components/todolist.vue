@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { useStore } from 'vuex'
 
 const axios = require("axios");
 // import { onBeforeMount } from 'vue'
@@ -97,8 +98,9 @@ export default {
   // 	})
   // },
   created() {
-    var userId = '0';
-    axios.get(this.firebaseBase + this.apiBase + '/to-do/' + userId)
+    const store = useStore();
+    this.userId = store.state.user.uid;
+    axios.get(this.firebaseBase + this.apiBase + '/to-do/' + this.userId)
       .then(resp => {
         console.log(resp.data.to_do_list);
         this.todos = resp.data.to_do_list;
@@ -113,6 +115,7 @@ export default {
       tempStatusTodo: "",
       todoStatus: ["to-do", "on-going", "finished"],
       todos: [],
+      userId: null,
     };
   },
 
@@ -124,7 +127,7 @@ export default {
           "note": this.newTodo,
           "status": "to-do",
           "order": this.todos.length + 1,
-          "user_id": "0",
+          "user_id": this.userId,
         })
           .then(resp => {
             this.todos.push({
