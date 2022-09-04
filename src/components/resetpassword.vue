@@ -96,7 +96,7 @@
                   <div class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                     <i class="mdi mdi-email-outline text-gray-400 text-lg"></i>
                   </div>
-                  <input type="email"
+                  <input type="email" v-model="email"
                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                     placeholder="Email address">
                 </div>
@@ -104,7 +104,7 @@
             </div>
             <div class="flex -mx-3 ">
               <div class="w-full px-3 mb-5">
-                <button
+                <button @click="reset"
                   class="block w-full max-w-xs mx-auto bg-indigo-500  hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold ">Send
                   Password Reset Link</button>
               </div>
@@ -124,8 +124,32 @@
 </template>
 
 <script>
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+
 export default {
   // name: "slideteam",
+methods: {
+  reset(event) {
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, this.email)
+      .then(() => {
+        alert(`Password reset email sent to ${this.email}!`)
+        this.$router.push('/login') 
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode)
+        if (errorCode == "auth/user-not-found") {
+          alert(`User not found with email ${this.email}!`)
+        }
+        else if (errorCode == "auth/invalid-email") {
+          alert(`Invalid email!`)
+        }
+      });
+  }
+}
+
 };
 </script>
 

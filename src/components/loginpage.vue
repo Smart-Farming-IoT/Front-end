@@ -2,7 +2,7 @@
 	<main class="login">
 		<section class="forms">
 			<form class="login" @submit.prevent="login">
-				<div class="min-w-screen min-h-screen bg-blue-100 bg-opacity-30 flex items-center justify-center px-5 py-5">
+				<div class="min-w-screen min-h-screen bg-blue-100 bg-opacity-30 flex items-center justify-center pb-24 px-5 py-5">
 					<div class="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden" style="max-width:1000px">
 						<div class="md:flex w-full">
 							<div class="hidden md:block w-1/2 bg-indigo-500 py-10 px-10">

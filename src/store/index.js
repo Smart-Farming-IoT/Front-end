@@ -4,7 +4,8 @@ import { auth } from '../firebase'
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut 
+  signOut,
+  updateProfile
 } from 'firebase/auth'
 
 export default createStore({
@@ -48,11 +49,22 @@ export default createStore({
       router.push('/')
     },
 
-    async register ({ commit}, details) {
-       const { email, password  } = details
+    async register ({commit}, details) {
+      const { email, password, firstname, lastname } = details
 
       try {
-        await createUserWithEmailAndPassword(auth, email, password,)
+        await createUserWithEmailAndPassword(auth, email, password)
+
+        updateProfile(auth.currentUser, {
+          displayName: `${firstname} ${lastname}`,
+        }).then(() => {
+          // Profile updated!
+          // ...
+        }).catch((error) => {
+          // An error occurred
+          // ...
+        });
+
       } catch (error) {
         switch(error.code) {
           case 'auth/email-already-in-use':
@@ -76,7 +88,7 @@ export default createStore({
 
       commit('SET_USER', auth.currentUser)
 
-      router.push('/')
+      // router.push('/')
     },
 
     async logout ({ commit }) {

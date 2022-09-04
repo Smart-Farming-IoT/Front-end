@@ -23,9 +23,7 @@ const routes = [
     path: '/team',
     name: 'team',
     component: team,
-    meta: {
-      requiresAuth: true
-    }
+
   },
   {
     path: '/about',
@@ -74,7 +72,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(auth.currentUser)
   if (to.path === '/login' && auth.currentUser) {
     next('/');
     return;
