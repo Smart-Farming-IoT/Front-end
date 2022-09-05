@@ -20,7 +20,7 @@ export default createStore({
 
     CLEAR_USER (state) {
       state.user = null
-    }
+    },
 
   },
   actions: {
@@ -88,7 +88,7 @@ export default createStore({
 
       commit('SET_USER', auth.currentUser)
 
-      // router.push('/')
+      router.push('/')
     },
 
     async logout ({ commit }) {
@@ -111,7 +111,17 @@ export default createStore({
           }
         }
       })
+    },
+
+    async updateProfile ({commit}, details) {
+      updateProfile(auth.currentUser, details).then(() => {
+        // Profile updated!
+        // ...
+      }).catch((error) => {
+        // An error occurred
+        // ...
+      });
+      commit('SET_USER', auth.currentUser)
     }
-    
   }
 })

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <navbarleft child_component="myprofile" />
 </template>
 <script>
@@ -8,4 +8,4 @@ export default {
   },
 
 };
-</script>
+</script> -->

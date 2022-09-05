@@ -6,7 +6,6 @@ import todo from '../views/todo.vue'
 import login from '../views/login.vue'
 import register from '../views/register.vue'
 import reset from '../views/reset.vue'
-import profile from '../views/profile.vue'
 import editprofile from '../views/editprofile.vue'
 import { auth } from '../firebase'
 
@@ -53,11 +52,7 @@ const routes = [
     name: 'reset',
     component: reset 
   },  
-  {
-    path: '/profile',
-    name: 'profile',
-    component: profile
-  },  
+  
   {
     path: '/editprofile',
     name: 'editprofile',

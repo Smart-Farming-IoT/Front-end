@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="h-screen bg-blue-100 bg-opacity-30  flex flex-wrap items-center  justify-center  ">
     <div
       class="container lg:w-2/6 xl:w-2/7 sm:w-full md:w-2/3    bg-white  shadow-lg    transform   duration-200 easy-in-out">
@@ -41,4 +41,4 @@ h3,
 p {
   font-family: "Mitr", sans-serif;
 }
-</style>
+</style> -->
