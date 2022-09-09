@@ -23,8 +23,9 @@
             First Name
           </p>
           <p>
-            <a v-if="!isEditing">{{userFirstName}}</a>
-            <input v-if="isEditing" v-model="userFirstName" style="border: 2px solid black"/>
+            <a v-if="!isEditing">{{ userFirstName }}</a>
+            <input v-if="isEditing" v-model="userFirstName" style="border: 2px solid black" />
+          <a v-if="firstnameInvalid">Please input a valid firstname</a>
           </p>
         </div>
         <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
@@ -32,8 +33,9 @@
             Last Name
           </p>
           <p>
-            <a v-if="!isEditing">{{userLastName}}</a>
-            <input v-if="isEditing" v-model="userLastName" style="border: 2px solid black"/>
+            <a v-if="!isEditing">{{ userLastName }}</a>
+            <input v-if="isEditing" v-model="userLastName" style="border: 2px solid black" />
+            <a v-if="lastnameInvalid">Please input a valid lastname</a>
           </p>
         </div>
         <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
@@ -80,13 +82,25 @@ export default {
     this.userFirstName = this.userFullName[0];
     this.userLastName = this.userFullName[1];
     this.isEditing = false;
+    this.firstnameInvalid = false;
+    this.lastnameInvalid = false;
   },
   data() {
     return {
       userFullName: this.userFullName,
       userFirstName: this.userFirstName,
       userLastName: this.userLastName,
-      isEditing: this.isEditing
+      isEditing: this.isEditing,
+      firstnameInvalid: this.firstnameInvalid,
+      lastnameInvalid: this.lastnameInvalid,
+    }
+  },
+  watch: {
+    userFirstName(value) {
+      this.userFirstName = value.replace(/ +/g, '');
+    },
+    userLastName(value) {
+      this.userLastName = value.replace(/ +/g, '');
     }
   },
   methods: {
@@ -94,6 +108,23 @@ export default {
       this.isEditing = !this.isEditing;
     },
     saveButtonClickedHandler: function (e) {
+      this.firstnameInvalid = false
+      this.lastnameInvalid = false
+      console.log(this.userFirstName)
+      console.log(this.userLastName)
+      
+      if (this.userFirstName === "") {
+        this.firstnameInvalid = true
+         
+      }
+      if (this.userLastName === "") {
+        this.lastnameInvalid = true
+         
+      }
+       if (this.lastnameInvalid || this.firstnameInvalid ) {
+        return
+      }
+
       this.userNameChangedHandler()
       this.isEditing = !this.isEditing;
     },
@@ -106,7 +137,7 @@ export default {
       console.log('dispatched')
     }
   }
-  
+
 };
 </script>
 

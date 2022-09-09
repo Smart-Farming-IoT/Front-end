@@ -102,6 +102,7 @@
                         <input type="firstname" v-model="register_form.firstname"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                           placeholder="John">
+                          <a v-if="firstnameInvalid">Please input a valide Password</a>
                       </div>
                     </div>
                     <div class="w-1/2 px-3 mb-5">
@@ -113,6 +114,7 @@
                         <input type="lastname" v-model="register_form.lastname"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                           placeholder="Smith">
+                          <a v-if="lastnameInvalid">Please input a valide Password</a>
                       </div>
                     </div>
                   </div>
@@ -127,6 +129,7 @@
                         <input type="email" placeholder="Email address" v-model="register_form.email"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
                       </div>
+                        <a v-if="emailInvalid">Please input a valide Email Address</a>
                     </div>
                   </div>
                   <div class="flex -mx-3" method="POST">
@@ -140,6 +143,7 @@
                           name="password" autocomplete="current-password"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
                       </div>
+                      <a v-if="passwordInvalid">Please input a valide Password</a>
                       <div class="flex  pt-3 pl-56 ">
                         <div class="text-sm  px-6 mb-6 ">
                         </div>
@@ -171,25 +175,85 @@
 
 <script>
 import { ref } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 export default {
-  setup() {
-    const login_form = ref({});
-    const register_form = ref({});
-    const store = useStore();
-    const login = () => {
-      store.dispatch('login', login_form.value);
-    }
-    const register = () => {
-      store.dispatch('register', register_form.value);
-    }
+
+    created() {
+    this.register_form = ref({});
+    this.emailInvalid = false;
+    this.passwordInvalid = false;
+    this.firstnameInvalid = false;
+      this.lastnameInvalid = false;
+  },
+  data() {
     return {
-      login_form,
-      register_form,
-      login,
-      register
+      register_form: this.register_form,
+      emailInvalid: this.emailInvalid,
+      firstnameInvalid: this.firstnameInvalid,
+      lastnameInvalid: this.lastnameInvalid,
+      passwordInvalid: this.passwordInvalid,
     }
-  }
+  },
+    methods: {
+    register: function (e) {
+      this.emailInvalid = false
+      this.passwordInvalid = false
+      this.firstnameInvalid = false;
+      this.lastnameInvalid = false;
+      const { email, password , firstname , lastname } = this.register_form
+      if (email === undefined) {
+        this.emailInvalid = true
+      }
+      if (password === undefined) {
+        this.passwordInvalid = true
+      }
+        if (firstname === undefined) {
+        this.firstnameInvalid = true
+      }
+        if (lastname === undefined) {
+        this.lastnameInvalid = true
+      }
+      if (this.emailInvalid || this.passwordInvalid || this.lastnameInvalid || this.firstnameInvalid) {
+        return
+      }
+      
+      this.$store.dispatch(
+        'register',
+        this.register_form
+      ).then((e) => {
+        console.log('Register called!', e);
+        if (e.code == "auth/user-not-found") {
+          this.emailInvalid = true;
+        }
+        else if (e.code == "auth/wrong-password") {
+          this.passwordInvalid = true;
+        }
+           else if (e.code == "auth/wrong-lastname") {
+          this.lastnameInvalid = true;
+        }
+           else if (e.code == "auth/wrong-firstname") {
+          this.firstnameInvalid = true;
+        }
+      });
+    },
+  },
+  // setup() {
+  //   const login_form = ref({});
+  //   const register_form = ref({});
+  //   const store = useStore();
+  //   const login = () => {
+  //     store.dispatch('login', login_form.value);
+  //   }
+  //   const register = () => {
+  //     store.dispatch('register', register_form.value);
+  //   }
+  //   return {
+  //     login_form,
+  //     register_form,
+  //     login,
+  //     register
+  //   }
+  // }
 }
 
 </script>

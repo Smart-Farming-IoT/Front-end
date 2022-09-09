@@ -27,6 +27,8 @@ export default createStore({
     async login ({ commit }, details) {
       const { email, password } = details
 
+      console.log(email, password)
+
       try {
         await signInWithEmailAndPassword(auth, email, password)
       } catch (error) {
@@ -40,8 +42,7 @@ export default createStore({
           default:
             alert("Something went wrong")
         }
-
-        return
+        return error
       }
 
       commit('SET_USER', auth.currentUser)
@@ -53,7 +54,7 @@ export default createStore({
       const { email, password, firstname, lastname } = details
 
       try {
-        await createUserWithEmailAndPassword(auth, email, password)
+        await createUserWithEmailAndPassword(auth, email, password , firstname, lastname)
 
         updateProfile(auth.currentUser, {
           displayName: `${firstname} ${lastname}`,
@@ -73,6 +74,12 @@ export default createStore({
           case 'auth/invalid-email':
             alert("Invalid email")
             break
+            case 'auth/invalid-firstname':
+            alert("Invalid firstname")
+            break
+            case 'auth/invalid-lastname':
+            alert("Invalid lastname")
+            break
           case 'auth/operation-not-allowed':
             alert("Operation not allowed")
             break
@@ -83,7 +90,7 @@ export default createStore({
             alert("Something went wrong")
         }
 
-        return
+        return error
       }
 
       commit('SET_USER', auth.currentUser)
