@@ -99,12 +99,9 @@ export default {
   created() {
     const store = useStore();
     this.userId = store.state.user.uid;
-    axios.post(this.firebaseBase + this.apiBase + '/to-do', {
-          "user_id": this.userId,
-        })
-    .then(resp => {
-      this.todos = resp.data.to_do_list;
-    });
+    this.todos = []
+    
+    this.refreshToDos()
   },
   data() {
     return {
@@ -119,6 +116,14 @@ export default {
     };
   },
   methods: {
+    refreshToDos() {
+      axios.post(this.firebaseBase + this.apiBase + '/to-do', {
+            "user_id": this.userId,
+          })
+          .then(resp => {
+            this.todos = resp.data.to_do_list;
+          });
+    },
     addTodo() {
       if (this.newTodo.length === 0) return;
       if (this.indexEditTodo === null) {
@@ -139,6 +144,7 @@ export default {
           })
           .catch(resp => {
             console.log(resp)
+            this.refreshToDos()
           });
       } else {
         axios.put(this.firebaseBase + this.apiBase + '/to-do', {
@@ -152,6 +158,7 @@ export default {
           })
           .catch(resp => {
             console.log(resp)
+            this.refreshToDos()
           });
       }
     },
@@ -172,6 +179,7 @@ export default {
         })
         .catch(resp => {
           console.log(resp)
+          this.refreshToDos()
         });
     },
     changeStatus(index) {
@@ -187,6 +195,7 @@ export default {
         })
         .catch(resp => {
           console.log(resp)
+          this.refreshToDos()
         });
     },
     upTodo(index) {
@@ -207,6 +216,7 @@ export default {
         })
         .catch(resp => {
           console.log(resp)
+          this.refreshToDos()
         });
     },
     downTodo(index) {
@@ -223,6 +233,7 @@ export default {
         })
         .catch(resp => {
           console.log(resp)
+          this.refreshToDos()
         });
       if (index === this.todos.length - 1) return;
     },
