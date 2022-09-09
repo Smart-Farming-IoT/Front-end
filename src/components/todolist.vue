@@ -99,11 +99,12 @@ export default {
   created() {
     const store = useStore();
     this.userId = store.state.user.uid;
-    axios.get(this.firebaseBase + this.apiBase + '/to-do/' + this.userId)
-      .then(resp => {
-        console.log(resp.data.to_do_list);
-        this.todos = resp.data.to_do_list;
-      });
+    axios.post(this.firebaseBase + this.apiBase + '/to-do', {
+          "user_id": this.userId,
+        })
+    .then(resp => {
+      this.todos = resp.data.to_do_list;
+    });
   },
   data() {
     return {
@@ -121,7 +122,7 @@ export default {
     addTodo() {
       if (this.newTodo.length === 0) return;
       if (this.indexEditTodo === null) {
-        axios.post(this.firebaseBase + this.apiBase + '/to-do', {
+        axios.post(this.firebaseBase + this.apiBase + '/to-do/new', {
           "note": this.newTodo,
           "status": "to-do",
           "order": this.todos.length + 1,
@@ -140,7 +141,8 @@ export default {
             console.log(resp)
           });
       } else {
-        axios.put(this.firebaseBase + this.apiBase + '/to-do/' + this.todos[this.indexEditTodo].id, {
+        axios.put(this.firebaseBase + this.apiBase + '/to-do', {
+          "id": this.todos[this.indexEditTodo].id,
           "note": this.newTodo,
         })
           .then(resp => {
@@ -158,8 +160,12 @@ export default {
       this.indexEditTodo = index;
     },
     deleteTodo(index) {
-      console.log(index)
-      axios.delete(this.firebaseBase + this.apiBase + '/to-do/' + this.todos[index].id)
+      console.log(index, this.todos[index].id)
+      axios.delete(this.firebaseBase + this.apiBase + '/to-do', {
+        data: {
+          "id": this.todos[index].id
+        }
+      })
         .then(resp => {
           console.log(resp)
           this.todos.splice(index, 1);
@@ -171,7 +177,8 @@ export default {
     changeStatus(index) {
       let statusIndex = this.todoStatus.indexOf(this.todos[index].status);
       if (++statusIndex > 2) statusIndex = 0;
-      axios.put(this.firebaseBase + this.apiBase + '/to-do/' + this.todos[index].id, {
+      axios.put(this.firebaseBase + this.apiBase + '/to-do', {
+        "id": this.todos[index].id,
         "status": this.todoStatus[statusIndex],
       })
         .then(resp => {
@@ -184,7 +191,9 @@ export default {
     },
     upTodo(index) {
       if (index === 0) return;
-      axios.post(this.firebaseBase + this.apiBase + '/to-do/up/' + this.todos[index].id)
+      axios.post(this.firebaseBase + this.apiBase + '/to-do/up', {
+        "id": this.todos[index].id
+      })
         .then(resp => {
           this.tempNameTodo = this.todos[index].note;
           this.tempStatusTodo = this.todos[index].status;
@@ -201,7 +210,9 @@ export default {
         });
     },
     downTodo(index) {
-      axios.post(this.firebaseBase + this.apiBase + '/to-do/down/' + this.todos[index].id)
+      axios.post(this.firebaseBase + this.apiBase + '/to-do/down', {
+        "id": this.todos[index].id
+      })
         .then(resp => {
           this.tempNameTodo = this.todos[index].note;
           this.tempStatusTodo = this.todos[index].status;
