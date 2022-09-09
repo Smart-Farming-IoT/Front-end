@@ -18,7 +18,7 @@
           <a class="title-font text-xl font-bold">{{ device.name }}</a>
           <a class="pl-2 title-font text-l">(IMEI: {{ device.imei }})</a>
           <a class="pl-2 title-font text-l">
-            Lastest update on 
+            Latest update on 
             <a v-if="device.latest_timestamp !== '-'">
               {{ new Date(device.latest_timestamp*1000).toLocaleDateString("en-US") }} {{ new Date(device.latest_timestamp*1000).toLocaleTimeString("en-US") }}
             </a>
