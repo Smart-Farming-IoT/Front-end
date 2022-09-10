@@ -103,7 +103,7 @@
                         <input type="email" placeholder="Email address" v-model="login_form.email"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
                       </div>
-                      <a v-if="emailInvalid">Please input a valide Email Address</a>
+                      <a v-if="emailInvalid" class="text-red-500">Email Address field is required</a>
                     </div>
                   </div>
 
@@ -118,7 +118,7 @@
                           name="password" autocomplete="current-password"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
                       </div>
-                      <a v-if="passwordInvalid">Please input a valide Password</a>
+                      <a v-if="passwordInvalid" class="text-red-500">Password field is required</a>
                       <div class="flex  pt-3 pl-56 ">
                         <div class="text-sm  px-6 mb-6 ">
                           <a href="/reset" class="font-medium text-indigo-600 hover:underline hover:text-indigo-500">

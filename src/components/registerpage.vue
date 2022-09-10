@@ -2,7 +2,8 @@
   <main class="login">
     <section class="forms">
       <form class="register" @submit.prevent="register">
-        <div class="min-w-screen min-h-screen bg-blue-100 bg-opacity-30 flex items-center justify-center pb-20 px-5 py-5">
+        <div
+          class="min-w-screen min-h-screen bg-blue-100 bg-opacity-30 flex items-center justify-center pb-20 px-5 py-5">
           <div class="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden" style="max-width:1000px">
             <div class="md:flex w-full">
               <div class="hidden md:block w-1/2 bg-indigo-500 py-10 px-10">
@@ -102,8 +103,9 @@
                         <input type="firstname" v-model="register_form.firstname"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                           placeholder="John">
-                          <a v-if="firstnameInvalid">Please input a valide Password</a>
-                      </div>
+                        <br>
+
+                      </div><a v-if="firstnameInvalid" class="text-red-500">First Name field is required </a>
                     </div>
                     <div class="w-1/2 px-3 mb-5">
                       <label for="" class="text-xs font-semibold px-1">Last name</label>
@@ -114,8 +116,9 @@
                         <input type="lastname" v-model="register_form.lastname"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                           placeholder="Smith">
-                          <a v-if="lastnameInvalid">Please input a valide Password</a>
-                      </div>
+                        <br>
+
+                      </div><a v-if="lastnameInvalid" class="text-red-500">Last Name field is required </a>
                     </div>
                   </div>
 
@@ -129,7 +132,7 @@
                         <input type="email" placeholder="Email address" v-model="register_form.email"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
                       </div>
-                        <a v-if="emailInvalid">Please input a valide Email Address</a>
+                      <a v-if="emailInvalid" class="text-red-500">Email Address field is required</a>
                     </div>
                   </div>
                   <div class="flex -mx-3" method="POST">
@@ -143,7 +146,7 @@
                           name="password" autocomplete="current-password"
                           class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
                       </div>
-                      <a v-if="passwordInvalid">Please input a valide Password</a>
+                      <a v-if="passwordInvalid" class="text-red-500">Password field is required</a>
                       <div class="flex  pt-3 pl-56 ">
                         <div class="text-sm  px-6 mb-6 ">
                         </div>
@@ -178,12 +181,12 @@ import { ref } from 'vue'
 // import { useStore } from 'vuex'
 export default {
 
-    created() {
+  created() {
     this.register_form = ref({});
     this.emailInvalid = false;
     this.passwordInvalid = false;
     this.firstnameInvalid = false;
-      this.lastnameInvalid = false;
+    this.lastnameInvalid = false;
   },
   data() {
     return {
@@ -194,29 +197,29 @@ export default {
       passwordInvalid: this.passwordInvalid,
     }
   },
-    methods: {
+  methods: {
     register: function (e) {
       this.emailInvalid = false
       this.passwordInvalid = false
       this.firstnameInvalid = false;
       this.lastnameInvalid = false;
-      const { email, password , firstname , lastname } = this.register_form
+      const { email, password, firstname, lastname } = this.register_form
       if (email === undefined) {
         this.emailInvalid = true
       }
       if (password === undefined) {
         this.passwordInvalid = true
       }
-        if (firstname === undefined) {
+      if (firstname === undefined) {
         this.firstnameInvalid = true
       }
-        if (lastname === undefined) {
+      if (lastname === undefined) {
         this.lastnameInvalid = true
       }
       if (this.emailInvalid || this.passwordInvalid || this.lastnameInvalid || this.firstnameInvalid) {
         return
       }
-      
+
       this.$store.dispatch(
         'register',
         this.register_form
@@ -228,10 +231,10 @@ export default {
         else if (e.code == "auth/wrong-password") {
           this.passwordInvalid = true;
         }
-           else if (e.code == "auth/wrong-lastname") {
+        else if (e.code == "auth/wrong-lastname") {
           this.lastnameInvalid = true;
         }
-           else if (e.code == "auth/wrong-firstname") {
+        else if (e.code == "auth/wrong-firstname") {
           this.firstnameInvalid = true;
         }
       });

@@ -9,10 +9,10 @@
           <p class="text-sm text-gray-500">
             Update your account's profile information and email address.
           </p>
-          <button type="button" @click="editButtonClickedHandler" v-if="!isEditing"
+          <button type="button" @click="editProfileButtonClickedHandler" v-if="!isEditing"
             class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             Edit</button>
-          <button type="button" @click="saveButtonClickedHandler" v-if="isEditing"
+          <button type="button" @click="saveProfileButtonClickedHandler" v-if="isEditing"
             class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
             Save</button>
         </div>
@@ -25,7 +25,8 @@
           <p>
             <a v-if="!isEditing">{{ userFirstName }}</a>
             <input v-if="isEditing" v-model="userFirstName" style="border: 2px solid black" />
-          <a v-if="firstnameInvalid">Please input a valid firstname</a>
+            <br>
+            <a v-if="firstnameInvalid" class="text-red-500">Please input a valid firstname</a>
           </p>
         </div>
         <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
@@ -35,15 +36,20 @@
           <p>
             <a v-if="!isEditing">{{ userLastName }}</a>
             <input v-if="isEditing" v-model="userLastName" style="border: 2px solid black" />
-            <a v-if="lastnameInvalid">Please input a valid lastname</a>
+            <br>
+            <a v-if="lastnameInvalid" class="text-red-500">Please input a valid lastname</a>
           </p>
         </div>
         <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
           <p class="text-gray-600">
             Email Address
           </p>
-          <p>
+          <!-- <p>
             Test@gmail.com
+          </p> -->
+          <p>
+            <a>{{ email }}</a>
+            <!-- <input v-if="isEditing" v-model="email" style="border: 2px solid black" /> -->
           </p>
         </div>
         <div class="p-4 border-b">
@@ -54,18 +60,37 @@
             <p class="text-sm text-gray-500">
               Ensure your account is using a long, random password to stay secure.
             </p>
-            <button type="button"
+            <button type="button" @click="editPasswordClickedHandler" v-if="!isEditingPassword"
               class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
               Edit</button>
+            <button type="button" @click="savePasswordClickedHandler" v-if="isEditingPassword"
+              class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+              Save</button>
+            <button type="button" @click="cancelPasswordClickedHandler" v-if="isEditingPassword"
+              class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+              Cancel</button>
           </div>
         </div>
         <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
           <p class="text-gray-600">
             Password
           </p>
-          <p>
-            ****************
+          <div v-if="!isEditingPassword" class="flex">
+            <a>********</a>
+          </div>
+          <div v-if="isEditingPassword" class="flex">
+            <input v-model="password" placeholder="Enter a Current Password" type="password"
+              style="border: 2px solid black" />
+            <a v-if="passwordInvalid" class="text-red-500">Please input a valid password</a>
+          </div>
+          <p class="text-gray-600">
+            
           </p>
+          <div v-if="isEditingPassword" class="flex">
+            <input v-model="newPassword" placeholder="Enter a New Password" type="password"
+              style="border: 2px solid black" />
+            <a v-if="newPasswordInvalid" class="text-red-500">Please input a valid password</a>
+          </div>
         </div>
       </div>
     </div>
@@ -74,28 +99,57 @@
 
 <script>
 import { useStore } from 'vuex'
+import { getAuth, updatePassword } from "firebase/auth";
+
 export default {
   created() {
-    const store = useStore();
-    this.user = store.state.user;
-    this.userFullName = this.user.displayName.split(' ');
-    this.userFirstName = this.userFullName[0];
-    this.userLastName = this.userFullName[1];
+    this.user = this.$store.state.user;
+    if (this.user) {
+      this.userFullName = this.user.displayName.split(' ');
+      this.userFirstName = this.userFullName[0];
+      this.userLastName = this.userFullName[1];
+      this.email = this.user.email;
+    }
+    else {
+      this.userFullName = "";
+      this.userFirstName = "";
+      this.userLastName = "";
+      this.email = "";
+    }
     this.isEditing = false;
     this.firstnameInvalid = false;
     this.lastnameInvalid = false;
+    this.passwordInvalid = false;
+    this.newPasswordInvalid = false;
+    this.isEditingPassword = false;
+    this.password = "";
+    this.newPassword = "";
   },
   data() {
     return {
+      user: this.user,
       userFullName: this.userFullName,
       userFirstName: this.userFirstName,
       userLastName: this.userLastName,
+      email: this.email,
       isEditing: this.isEditing,
       firstnameInvalid: this.firstnameInvalid,
       lastnameInvalid: this.lastnameInvalid,
+      passwordInvalid: this.passwordInvalid,
+      newPasswordInvalid: this.newPasswordInvalid,
+      isEditingPassword: this.isEditingPassword,
+      password: this.password,
+      newPassword: this.newPassword
     }
   },
   watch: {
+    '$store.state.user': function() {
+      this.user = this.$store.state.user;
+      this.userFullName = this.user.displayName.split(' ');
+      this.userFirstName = this.userFullName[0];
+      this.userLastName = this.userFullName[1];
+      this.email = this.user.email;
+    },
     userFirstName(value) {
       this.userFirstName = value.replace(/ +/g, '');
     },
@@ -104,37 +158,87 @@ export default {
     }
   },
   methods: {
-    editButtonClickedHandler: function (e) {
+    editPasswordClickedHandler: function (e) {
+      this.isEditingPassword = true;
+    },
+    savePasswordClickedHandler: function (e) {
+      const password = this.password;
+      if (password === "") {
+        this.passwordInvalid = true;
+      }
+      else {
+        this.passwordInvalid = false;
+      }
+      const newPassword = this.newPassword;
+      if (newPassword === "") {
+        this.newPasswordInvalid = true;
+      }
+      else {
+        this.newPasswordInvalid = false;
+      }
+      if (this.passwordInvalid || this.newPasswordInvalid) {
+        return;
+      }
+      this.updatePassword(password, newPassword);
+      this.password = "";
+      this.newPassword = "";
+      this.isEditingPassword = false;
+    },
+    cancelPasswordClickedHandler: function (e) {
+      this.isEditingPassword = false;
+    },
+    editProfileButtonClickedHandler: function (e) {
       this.isEditing = !this.isEditing;
     },
-    saveButtonClickedHandler: function (e) {
-      this.firstnameInvalid = false
-      this.lastnameInvalid = false
-      console.log(this.userFirstName)
-      console.log(this.userLastName)
-      
+    saveProfileButtonClickedHandler: function (e) {
+      this.firstnameInvalid = false;
+      this.lastnameInvalid = false;
       if (this.userFirstName === "") {
-        this.firstnameInvalid = true
-         
+        this.firstnameInvalid = true;
       }
       if (this.userLastName === "") {
-        this.lastnameInvalid = true
-         
+        this.lastnameInvalid = true;
       }
-       if (this.lastnameInvalid || this.firstnameInvalid ) {
-        return
+      if (this.lastnameInvalid || this.firstnameInvalid) {
+        return;
       }
-
       this.userNameChangedHandler()
       this.isEditing = !this.isEditing;
     },
     userNameChangedHandler: function (e) {
       this.userFullName = `${this.userFirstName} ${this.userLastName}`;
       this.user.displayName = this.userFullName;
+      // this.user.email = this.email
       this.$store.dispatch('updateProfile', {
         displayName: this.user.displayName,
+        // email: this.user.email
       });
       console.log('dispatched')
+    },
+    
+    updatePassword: function (password, newPassword) {
+      this.$store.dispatch(
+        'login',
+        {
+          email: this.email,
+          password: password,
+          stay: true,
+        }
+      ).then((e) => {
+        if (e.code == "auth/wrong-password") {
+          this.passwordInvalid = true;
+        }
+      });
+
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      updatePassword(user, newPassword).then(() => {
+        // Update successful.
+        // TODO: popup > update password completed
+      }).catch((error) => {
+        console.log(error)
+      });
     }
   }
 

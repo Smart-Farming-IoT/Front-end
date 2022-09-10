@@ -25,9 +25,9 @@ export default createStore({
   },
   actions: {
     async login ({ commit }, details) {
-      const { email, password } = details
+      const { email, password, stay } = details
 
-      console.log(email, password)
+      // console.log(email, password, stay)
 
       try {
         await signInWithEmailAndPassword(auth, email, password)
@@ -47,7 +47,11 @@ export default createStore({
 
       commit('SET_USER', auth.currentUser)
 
-      router.push('/')
+      if (!stay) {
+        router.push('/')
+      }
+
+      return {code: "success"}
     },
 
     async register ({commit}, details) {
