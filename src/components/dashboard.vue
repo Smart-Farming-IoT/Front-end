@@ -20,49 +20,72 @@
           <a class="pl-2 title-font text-l">
             Latest update on 
             <a v-if="device.latest_timestamp !== '-'">
-              {{ new Date(device.latest_timestamp*1000).toLocaleDateString("en-US") }} {{ new Date(device.latest_timestamp*1000).toLocaleTimeString("en-US") }}
+              {{ new Date(device.latest_timestamp).toLocaleDateString("en-US") }} {{ new Date(device.latest_timestamp).toLocaleTimeString("en-US") }}
             </a>
             <a v-else>
               N/A
             </a>
           </a>
-          
         </div>
         <div class="flex flex-wrap text-center items-center justify-center">
           <!-- Soil Moisture -->
-          <div class="p-4 md:w-2/6 sm:w-1/2 w-full">
-            <div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-pink-400 px-4 py-6">
+          <div v-if="device.sensor_records.length > 0 && device.sensor_records[0].data.hasOwnProperty('moisture')" class="p-4 md:w-2/6 sm:w-1/2 w-full">
+            <div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-indigo-400 px-4 py-6">
               <div class="">
-                <img alt="content" class="rounded-full bg-pink-400 text-white p-4 w-20 h-20 mb-3 inline-block"
+                <img alt="content" class="rounded-full bg-indigo-400 text-white p-4 w-20 h-20 mb-3 inline-block"
                   src="@/assets/Iot/meter.png">
               </div>
-              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.latest_moisture.toUpperCase() }}</h2>
+              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.sensor_records[0].data.moisture }}</h2>
               <h2 class="title-font font-medium text-2xl text-gray-600">Soil Moisture</h2>
               <p class="leading-relaxed text-gray-600">Soil Moisture Content</p>
             </div>
           </div>
           <!-- PH Level -->
-          <div class="p-4 md:w-2/6 sm:w-1/2 w-full">
-            <div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-green-400 px-4 py-6">
+          <div v-if="device.sensor_records.length > 0 && device.sensor_records[0].data.hasOwnProperty('ph')" class="p-4 md:w-2/6 sm:w-1/2 w-full">
+            <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-green-400 px-4 py-6">
               <div class="">
                 <img alt="content" class="rounded-full bg-green-400 text-white p-4 w-20 h-20 mb-3 inline-block"
                   src="@/assets/Iot/phbalance.png">
               </div>
-              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.latest_ph }}</h2>
+              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.sensor_records[0].data.ph }}</h2>
               <h2 class="title-font font-medium text-2xl text-gray-600">PH Level</h2>
               <p class="leading-relaxed text-gray-600">Water PH Level</p>
             </div>
           </div>
-          <!-- Ambient light -->
-          <div class="p-4 md:w-2/6 sm:w-1/2 w-full">
-            <div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-yellow-400 px-4 py-6">
+          <!-- Light Intensity -->
+          <div v-if="device.sensor_records.length > 0 && device.sensor_records[0].data.hasOwnProperty('light_intensity')" class="p-4 md:w-2/6 sm:w-1/2 w-full">
+            <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-yellow-400 px-4 py-6">
               <div class="">
                 <img alt="content" class="rounded-full bg-yellow-400 text-white p-4 w-20 h-20 mb-3 inline-block"
                   src="@/assets/Iot/sun.png">
               </div>
-              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.latest_light_intensity.toUpperCase() }}</h2>
+              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.sensor_records[0].data.light_intensity }}</h2>
               <h2 class="title-font font-medium text-2xl text-gray-600">Ambient Light</h2>
               <p class="leading-relaxed text-gray-600">Ambient Light Content</p>
+            </div>
+          </div>
+          <!-- Humidity -->
+          <div v-if="device.sensor_records.length > 0 && device.sensor_records[0].data.hasOwnProperty('humidity')" class="p-4 md:w-2/6 sm:w-1/2 w-full">
+            <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-blue-400 px-4 py-6">
+              <div class="">
+                <img alt="content" class="rounded-full bg-blue-400 text-white p-4 w-20 h-20 mb-3 inline-block"
+                  src="@/assets/Iot/sun.png">
+              </div>
+              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.sensor_records[0].data.humidity }}</h2>
+              <h2 class="title-font font-medium text-2xl text-gray-600">Humidity</h2>
+              <p class="leading-relaxed text-gray-600">Humidity Content</p>
+            </div>
+          </div>
+          <!-- Temperature -->
+          <div v-if="device.sensor_records.length > 0 && device.sensor_records[0].data.hasOwnProperty('temperature')" class="p-4 md:w-2/6 sm:w-1/2 w-full">
+            <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-red-400 px-4 py-6">
+              <div class="">
+                <img alt="content" class="rounded-full bg-red-400 text-white p-4 w-20 h-20 mb-3 inline-block"
+                  src="@/assets/Iot/sun.png">
+              </div>
+              <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.sensor_records[0].data.temperature }}</h2>
+              <h2 class="title-font font-medium text-2xl text-gray-600">Temperature</h2>
+              <p class="leading-relaxed text-gray-600">Temperature Content</p>
             </div>
           </div>
         </div>
@@ -72,7 +95,7 @@
 				<!-- ON / OFF -->
 				<div class="flex flex-auto pt-6 text-center  items-center justify-center">
 					<div class="p-4 md:w-2/6 sm:w-1/2 w-full">
-						<div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-purple-400 px-4 py-6">
+						<div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-purple-400 px-4 py-6">
 							<div class="">
 								<img alt="content" class="rounded-full bg-purple-400 text-white p-4 w-20 h-20 mb-3 inline-block"
 									src="@/assets/Iot/waterdrop.png">
@@ -92,7 +115,7 @@
 					</div>
 					<!-- ON / OFF 2 -->
 					<div class="p-4 md:w-2/6 sm:w-1/2 w-full">
-						<div class="widget w-full p-4 rounded-lg  shadow-lg bg-white border-l-4 border-blue-400 px-4 py-6">
+						<div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-blue-400 px-4 py-6">
 							<div class="">
 								<img alt="content" class="rounded-full bg-blue-400 text-white p-4 w-20 h-20 mb-3 inline-block"
 									src="@/assets/Iot/plants.png">
@@ -192,11 +215,20 @@ export default {
       newDeviceName: this.newDeviceName,
       newDeviceNameInvalid: this.newDeviceNameInvalid,
       devices: this.devices,
+      timer: null,
 			message: 'Test',
 			toggle: true,
 			toggle2: true
 		};
 	},
+  mounted: function () {
+    this.timer = setInterval(() => {
+      this.refreshDevices()
+    }, 30000)
+  },
+  beforeUnmount() {
+    clearInterval(this.timer)
+  },
   methods: {
     refreshDevices() {
       axios.post(this.firebaseBase + this.apiBase + '/device', {
