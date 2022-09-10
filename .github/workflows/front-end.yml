@@ -8,41 +8,38 @@ on:
 jobs: 
    build:
      runs-on: ubuntu-latest
-     permissions:
-       packages: write
      
      steps:
      - name: Checkout code
        uses: actions/checkout@v2
-      
-     - name: Log in to Docker Hub
-       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+             
+     - name: Set up QEMU
+       uses: docker/setup-qemu-action@v2
+       
+     - name: Set up Docker Buildx
+       uses: docker/setup-buildx-action@v2
+       
+     - name: Login to DockerHub
+       uses: docker/login-action@v2
        with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
-     - name: Extract metadata (tags, labels) for Docker
-       id: meta
-       uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-       with:
-          images: my-docker-hub-namespace/my-docker-hub-repository
       
-     - name: Build and push Docker image
-       uses: docker/build-push-action@v2 
+     - name: Build and push
+       uses: docker/build-push-action@v3
        with:
-          context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          
+          tags: pungpeee19/smart_farming:latest
+                   
      - name: Build image and push Dockerfile
-       uses: docker/build-push-action@v2
+       uses: docker/build-push-action@v3
        with:
          file: ./Dockerfile
          context: .
          push: true
-         #build-args: API_URL=${{ secrets.VUE_APP_API }} 
-         tags: ghcr.io/smartfarming/front-end:main
+         tags: pungpeee19/smart_farming:latest
+         secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.SMART_FARMING_TOKEN }}
    
      - name: Publish compose file
        uses: appleboy/ssh-action@master
@@ -51,20 +48,22 @@ jobs:
          username: ${{ secrets.USERNAME }}
          password: ${{ secrets.PASSWORD }}
          source: .
-         target: .
+         target: ./smart-farming
     
-#    deploy:
-#       needs: build
-#       runs-on: ubuntu-latest
-#       steps:
+   deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
       
-#       - name: Deploy execute command ssh to remote server
-#         uses: appleboy/ssh-action@master
-#         with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          password: ${{ secrets.PASSWORD }}
-#          script: |
-#            docker-compose down 
-#            docker pull ghcr.io/smartfarming/front-end:main 
-#            docker-compose up -d 
+      - name: Deploy execute command ssh to remote server
+        uses: appleboy/ssh-action@master
+        with:
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         password: ${{ secrets.PASSWORD }}
+         script: |
+           cd Front-end
+           docker-compose -f ./docker-compose.yml down 
+           docker pull pungpeee19/smart_farming:latest
+           docker-compose -f ./docker-compose.yml up -d 
+           
