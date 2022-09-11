@@ -43,6 +43,8 @@ jobs:
          context: .
          push: true
          tags: pungpeee19/smart_farming:latest
+         build-args: |
+            FIREBASE_API_KEY=${{ secrets.VUE_APP_FIREBASE_API_KEY }}
          secrets: |
             GIT_AUTH_TOKEN=${{ secrets.SMART_FARMING_TOKEN }}
    
