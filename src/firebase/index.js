@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBBiSj5UZ5crccCgIVqmQOJftfumCBtlts",
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: "iot-systems-1bd8a.firebaseapp.com",
   projectId: "iot-systems-1bd8a",
   storageBucket: "iot-systems-1bd8a.appspot.com",
