@@ -24,6 +24,11 @@ jobs:
        with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+          
+     - name: Create env file
+       run: |
+          touch .env
+          echo VUE_APP_FIREBASE_API_KEY=${{ secrets.VUE_APP_FIREBASE_API_KEY }} >> .env
       
      - name: Build and push
        uses: docker/build-push-action@v3
