@@ -25,16 +25,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
-     - name: Create env file
-       run: |
-          touch .env
-          echo VUE_APP_FIREBASE_API_KEY=${{ secrets.VUE_APP_FIREBASE_API_KEY }} >> .env
+    #  - name: Create env file
+    #    run: |
+    #       touch .env
+    #       echo VUE_APP_FIREBASE_API_KEY=${{ secrets.VUE_APP_FIREBASE_API_KEY }} >> .env
       
-#      - name: Build and push
-#        uses: docker/build-push-action@v3
-#        with:
-#           push: true
-#           tags: pungpeee19/smart_farming:latest
+    #  - name: Build and push
+    #    uses: docker/build-push-action@v3
+    #    with:
+    #       push: true
+    #       tags: pungpeee19/smart_farming:latest
                    
      - name: Build image and push Dockerfile
        uses: docker/build-push-action@v3
@@ -71,4 +71,6 @@ jobs:
            docker-compose -f ./docker-compose.yml down 
            docker pull pungpeee19/smart_farming:latest
            docker-compose -f ./docker-compose.yml up -d 
+        env:
+         VUE_APP_FIREBASE_API_KEY: ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
            
