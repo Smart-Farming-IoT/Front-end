@@ -30,11 +30,11 @@ jobs:
           touch .env
           echo VUE_APP_FIREBASE_API_KEY=${{ secrets.VUE_APP_FIREBASE_API_KEY }} >> .env
       
-     - name: Build and push
-       uses: docker/build-push-action@v3
-       with:
-          push: true
-          tags: pungpeee19/smart_farming:latest
+#      - name: Build and push
+#        uses: docker/build-push-action@v3
+#        with:
+#           push: true
+#           tags: pungpeee19/smart_farming:latest
                    
      - name: Build image and push Dockerfile
        uses: docker/build-push-action@v3
