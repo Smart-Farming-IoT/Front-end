@@ -17,15 +17,21 @@
         <div class="pt-6 pl-4">
           <a class="title-font text-xl font-bold">{{ device.name }}</a>
           <a class="pl-2 title-font text-l">(IMEI: {{ device.imei }})</a>
-          <a class="pl-2 title-font text-l">
+          <a class="px-2 title-font text-l">
             Latest update on 
-            <a v-if="device.latest_timestamp !== '-'">
-              {{ new Date(device.latest_timestamp).toLocaleDateString("en-US") }} {{ new Date(device.latest_timestamp).toLocaleTimeString("en-US") }}
+            <a v-if="device.sensor_records.length > 0">
+              {{ new Date(device.sensor_records[0].timestamp).toLocaleDateString("en-US") }} {{ new Date(device.sensor_records[0].timestamp).toLocaleTimeString("en-US") }}
             </a>
             <a v-else>
               N/A
             </a>
           </a>
+          <button type="button" @click="openSensorEditorButtonHandler(device)" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 mr-2 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"> <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/> </svg> 
+          </button>
+          <button type="button" @click="openSensorDeleterButtonHandler(device)" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 mr-2 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"> <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/> <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/> </svg> 
+          </button>
         </div>
         <div class="flex flex-wrap text-center items-center justify-center">
           <!-- Soil Moisture -->
@@ -189,6 +195,101 @@
         </div>
       </div>
     </div>
+
+    <div id="editSensorModal" class="relative hidden z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Edit A Device</h3>
+                  <div class="mt-2">
+                    <div class="flex -mx-3">
+                      <div class="w-full px-3 mb-5">
+                        <label for="" class="text-xs font-semibold px-1">Device IMEI</label>
+                        <div class="flex">
+                          <label for="" class="px-1">{{editingDeviceIMEI}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex -mx-3">
+                      <div class="w-full px-3 mb-5">
+                        <label for="" class="text-xs font-semibold px-1">Device Name</label>
+                        <div class="flex">
+                          <div class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+                            <i class="mdi mdi-email-outline text-gray-400 text-lg"></i>
+                          </div>
+                          <input type="text" placeholder="Enter Device Name" v-model="editingDeviceName"
+                            class="w-full -ml-10 pl-5 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-green-500">
+                        </div>
+                        <label for="" v-if="editingDeviceNameInvalid" class="text-xs font-semibold text-red-500 px-1">{{this.editingDeviceNameInvalid}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button type="button" @click="confirmSensorEditingButtonHandler()" class="inline-flex w-full justify-center rounded-md border border-transparent bg-green-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">Edit</button>
+              <button type="button" @click="cancelSensorEditingButtonHandler()" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="deleteSensorModal" class="relative hidden z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/> <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                  </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Delete A Device</h3>
+                  <div class="mt-2">
+                    <div class="flex -mx-3">
+                      <div class="w-full px-3 mb-5">
+                        <label for="" class="text-xs font-semibold px-1">Device IMEI</label>
+                        <div class="flex">
+                          <label v-if="deletingDevice" for="" class="px-1">{{deletingDevice.imei}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex -mx-3">
+                      <div class="w-full px-3 mb-5">
+                        <label for="" class="text-xs font-semibold px-1">Device Name</label>
+                        <div class="flex">
+                          <label v-if="deletingDevice" for="" class="px-1">{{deletingDevice.name}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <label for="" v-if="deletingDeviceInvalid" class="text-xs font-semibold text-red-500 px-1">{{this.deletingDeviceInvalid}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button type="button" @click="confirmSensorDeletingButtonHandler()" class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">Confirm</button>
+              <button type="button" @click="cancelSensorDeletingButtonHandler()" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 	</section>
 </template>
 
@@ -204,6 +305,12 @@ export default {
     this.newDeviceIMEIInvalid = ""
     this.newDeviceName = ""
     this.newDeviceNameInvalid = false
+    this.editingDevice = null
+    this.editingDeviceIMEI = ""
+    this.editingDeviceName = ""
+    this.editingDeviceNameInvalid = false
+    this.deletingDevice = null
+    this.deletingDeviceInvalid = false
     this.devices = []
 
     this.refreshDevices()
@@ -214,6 +321,12 @@ export default {
       newDeviceIMEIInvalid: this.newDeviceIMEIInvalid,
       newDeviceName: this.newDeviceName,
       newDeviceNameInvalid: this.newDeviceNameInvalid,
+      editingDevice: this.editingDevice,
+      editingDeviceIMEI: this.editingDeviceIMEI,
+      editingDeviceName: this.editingDeviceName,
+      editingDeviceNameInvalid: this.editingDeviceNameInvalid,
+      deletingDevice: this.deletingDevice,
+      deletingDeviceInvalid: this.deletingDeviceInvalid,
       devices: this.devices,
       timer: null,
 			message: 'Test',
@@ -286,7 +399,79 @@ export default {
       this.newDeviceNameInvalid = false
       var element = document.getElementById("addSensorModal");
       element.classList.add("hidden");
-    }
+    },
+    openSensorEditorButtonHandler(device) {
+      this.editingDevice = device
+      this.editingDeviceIMEI = device.imei
+      this.editingDeviceName = device.name
+      this.editingDeviceNameInvalid = false
+      var element = document.getElementById("editSensorModal");
+      element.classList.remove("hidden");
+    },
+    confirmSensorEditingButtonHandler() {
+      if (this.editingDeviceName === "") {
+        this.editingDeviceNameInvalid = "Please input a valid Device Name"
+      }
+      else {
+        this.editingDeviceNameInvalid = ""
+      }
+      if (this.editingDeviceNameInvalid) {
+        return
+      }
+      axios.put(this.firebaseBase + this.apiBase + '/device', {
+          "id": this.editingDevice.id,
+          "name": this.editingDeviceName
+        })
+          .then(resp => {
+            this.refreshDevices()
+            var element = document.getElementById("editSensorModal");
+            element.classList.add("hidden");
+          })
+          .catch(resp => {
+            console.log(resp)
+            if (resp.response.data.msg === "Cannot edit a device") {
+              this.editingDeviceNameInvalid = "Something went wrong."
+            }
+          });
+    },
+    cancelSensorEditingButtonHandler() {
+      this.editingDevice = null
+      this.editingDeviceIMEI = ""
+      this.editingDeviceName = ""
+      this.editingDeviceNameInvalid = false
+      var element = document.getElementById("editSensorModal");
+      element.classList.add("hidden");
+    },
+    openSensorDeleterButtonHandler(device) {
+      this.deletingDevice = device
+      this.deletingDeviceInvalid = false
+      var element = document.getElementById("deleteSensorModal");
+      element.classList.remove("hidden");
+    },
+    confirmSensorDeletingButtonHandler() {
+      axios.delete(this.firebaseBase + this.apiBase + '/device', {
+          data: {
+            "id": this.deletingDevice.id,
+          }
+        })
+          .then(resp => {
+            this.refreshDevices()
+            var element = document.getElementById("deleteSensorModal");
+            element.classList.add("hidden");
+          })
+          .catch(resp => {
+            console.log(resp)
+            if (resp.response.data.status === "failed") {
+              this.deletingDeviceInvalid = "Something went wrong."
+            }
+          });
+    },
+    cancelSensorDeletingButtonHandler() {
+      this.deletingDevice = null
+      this.deletingDeviceInvalid = false
+      var element = document.getElementById("deleteSensorModal");
+      element.classList.add("hidden");
+    },
   }
 };
 </script>
