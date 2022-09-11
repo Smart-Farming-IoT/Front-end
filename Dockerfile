@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 # ARG VUE_APP_FIREBASE_API_KEY
-ENV VUE_APP_FIREBASE_API_KEY ${{secrets.VUE_APP_FIREBASE_API_KEY}}
+ENV VUE_APP_FIREBASE_API_KEY ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
 COPY . .
 RUN npm run build
 
