@@ -71,6 +71,4 @@ jobs:
            docker-compose -f ./docker-compose.yml down 
            docker pull pungpeee19/smart_farming:latest
            docker-compose -f ./docker-compose.yml up -d 
-        env:
-         VUE_APP_FIREBASE_API_KEY: ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
            
