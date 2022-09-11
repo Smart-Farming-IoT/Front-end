@@ -75,7 +75,7 @@
             <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-blue-400 px-4 py-6">
               <div class="">
                 <img alt="content" class="rounded-full bg-blue-400 text-white p-4 w-20 h-20 mb-3 inline-block"
-                  src="@/assets/Iot/sun.png">
+                  src="@/assets/Iot/meter.png">
               </div>
               <h2 class="title-font font-medium text-3xl text-gray-900">{{ device.sensor_records[0].data.humidity }}</h2>
               <h2 class="title-font font-medium text-2xl text-gray-600">Humidity</h2>
