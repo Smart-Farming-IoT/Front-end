@@ -1,7 +1,7 @@
 version: "3.3"
-services:
+services:      
   frontend:
-    build: .
+    build: .      
     image: pungpeee19/smart_farming:latest   
 networks:
     default:
