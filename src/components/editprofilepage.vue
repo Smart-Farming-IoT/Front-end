@@ -53,15 +53,15 @@
             Token
           </p>
           <div>
-            <!-- Test copy token -->
-            <span>{{ copymytoken }}</span>
-            <input type="hidden" id="testing-code" :value="copymytoken">
-            <button type="button" @click="gentoken"
-              class=" ml-12 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 mr-1 mb-1 ">
-              Gen token line </button>
-            <button type="button" @click.stop.prevent="copymytokens"
-              class=" ml-12 text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mr-1 mb-1  ">
+            <span>{{ myToken }}</span>
+            <input type="hidden" id="my-token" :value="myToken">
+            <button type="button" @click.stop.prevent="copyMyTokens" v-show="myToken && myToken!='Linked'"
+              class="ml-1 text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mr-1 mb-1  ">
               Copy</button>
+            <button type="button" @click="createNewToken"
+              class="ml-1 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 mr-1 mb-1 ">
+              {{ (myToken!='Linked') ? 'Create token' : 'Unlink' }} </button>
+            <p v-show="myToken && myToken!='Linked'">Token is valid for 5 minutes.</p>
           </div>
         </div>
         <div class="p-4 border-b">
@@ -110,8 +110,8 @@
 </template>
 
 <script>
-import { useStore } from 'vuex'
 import { getAuth, updatePassword } from "firebase/auth";
+const axios = require("axios");
 
 export default {
   created() {
@@ -121,6 +121,7 @@ export default {
       this.userFirstName = this.userFullName[0];
       this.userLastName = this.userFullName[1];
       this.email = this.user.email;
+      this.updateLinker()
     }
     else {
       this.userFullName = "";
@@ -139,8 +140,6 @@ export default {
   },
   data() {
     return {
-
-      copymytoken: "1234555d",
       user: this.user,
       userFullName: this.userFullName,
       userFirstName: this.userFirstName,
@@ -153,7 +152,9 @@ export default {
       newPasswordInvalid: this.newPasswordInvalid,
       isEditingPassword: this.isEditingPassword,
       password: this.password,
-      newPassword: this.newPassword
+      newPassword: this.newPassword,
+      myToken: "",
+      linker: null
     }
   },
   watch: {
@@ -163,6 +164,7 @@ export default {
       this.userFirstName = this.userFullName[0];
       this.userLastName = this.userFullName[1];
       this.email = this.user.email;
+      this.updateLinker();
     },
     userFirstName(value) {
       this.userFirstName = value.replace(/ +/g, '');
@@ -172,12 +174,24 @@ export default {
     }
   },
   methods: {
-
-    copymytokens() {
-      let copytoken = document.querySelector('#testing-code')
-      copytoken.setAttribute('type', 'text')
-      copytoken.select()
-
+    updateLinker: function() {
+      axios.post(this.firebaseBase + this.apiBase + '/line-user-linker', {
+        "user_id": this.user.uid,
+      })
+      .then(resp => {
+        if (resp.data.msg === "success" && resp.data.line_user_id !== "") {
+          this.linker = {
+            firebase_user_id: resp.data.firebase_user_id,
+            line_user_id: resp.data.line_user_id
+          };
+          this.myToken = "Linked"
+        }
+      });
+    },
+    copyMyTokens: function() {
+      let token = document.querySelector('#my-token');
+      token.setAttribute('type', 'text');
+      token.select();
       try {
         var successful = document.execCommand('copy');
         var msg = successful ? 'successful' : 'unsuccessful';
@@ -185,10 +199,21 @@ export default {
       } catch (err) {
         alert('Oops, unable to copy');
       }
-      copytoken.setAttribute('type', 'hidden')
-      window.getSelection().removeAllRanges()
+      token.setAttribute('type', 'hidden');
+      window.getSelection().removeAllRanges();
     },
-
+    createNewToken: function() {
+      axios.post(this.firebaseBase + this.apiBase + '/line-user-linker/new', {
+          "user_id": this.user.uid,
+          "force": (this.myToken == 'Linked')
+        })
+          .then(resp => {
+            this.myToken = "LINK" + resp.data.id
+          })
+          .catch(resp => {
+            console.log(resp)
+          });
+    },
     editPasswordClickedHandler: function (e) {
       this.isEditingPassword = true;
     },
