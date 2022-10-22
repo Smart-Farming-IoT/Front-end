@@ -93,6 +93,30 @@
                   <p>Enter your information to login</p>
                 </div>
                 <div>
+                  <div class="flex pl-20 pr-20  items-center justify-center gap-4 ">
+                    <button @click="handleSignInGoogle"
+                      class="flex items-center justify-center w-full px-4 py-2 text-sm bg-white  border border-gray-300 rounded-lg hover:border-gray-500 focus:border-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        class="w-5 h-6 mr-2" viewBox="0 0 48 48">
+                        <defs>
+                          <path id="a"
+                            d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z" />
+                        </defs>
+                        <clipPath id="b">
+                          <use xlink:href="#a" overflow="visible" />
+                        </clipPath>
+                        <path clip-path="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z" />
+                        <path clip-path="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z" />
+                        <path clip-path="url(#b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z" />
+                        <path clip-path="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" />
+                      </svg>Google
+                    </button>
+                  </div>
+                  <div class="flex items-center justify-between mt-4  text-gray-500 ">
+                    <span class="w-1/5 border-b dark:border-gray-600 lg:w-1/4"></span>
+                    <p>or use your email</p>
+                    <span class="w-1/5 border-b dark:border-gray-600 lg:w-1/4"></span>
+                  </div>
                   <div class="flex -mx-3">
                     <div class="w-full px-3 mb-5">
                       <label for="" class="text-xs font-semibold px-1">Email Address</label>
@@ -106,7 +130,6 @@
                       <a v-if="emailInvalid" class="text-red-500">Email Address field is required</a>
                     </div>
                   </div>
-
                   <div class="flex -mx-3" method="POST">
                     <div class="w-full px-3 ">
                       <label for="password" class=" text-xs font-semibold px-1">Password</label>
@@ -156,6 +179,11 @@
 <script>
 
 import { ref } from 'vue'
+import { auth } from '../firebase'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+const provider = new GoogleAuthProvider();
+
 
 export default {
   created() {
@@ -171,6 +199,18 @@ export default {
     }
   },
   methods: {
+
+    handleSignInGoogle() {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log(result);
+          this.user = result.user.displayName;
+          this.login_form = true;
+        }).catch((error) => {
+          console.log(error);
+        });
+    },
+
     login: function (e) {
       this.emailInvalid = false
       this.passwordInvalid = false
@@ -184,7 +224,7 @@ export default {
       if (this.emailInvalid || this.passwordInvalid) {
         return
       }
-      
+
       this.$store.dispatch(
         'login',
         this.login_form
