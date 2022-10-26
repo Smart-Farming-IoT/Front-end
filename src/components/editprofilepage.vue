@@ -44,13 +44,25 @@
           <p class="text-gray-600">
             Email Address
           </p>
-          <!-- <p>
-            Test@gmail.com
-          </p> -->
           <p>
             <a>{{ email }}</a>
-            <!-- <input v-if="isEditing" v-model="email" style="border: 2px solid black" /> -->
           </p>
+        </div>
+        <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
+          <p class="text-gray-600">
+            Token
+          </p>
+          <div>
+            <span>{{ myToken }}</span>
+            <input type="hidden" id="my-token" :value="myToken">
+            <button type="button" @click.stop.prevent="copyMyTokens" v-show="myToken && myToken!='Linked'"
+              class="ml-1 text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mr-1 mb-1  ">
+              Copy</button>
+            <button type="button" @click="createNewToken"
+              class="ml-1 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 mr-1 mb-1 ">
+              {{ (myToken!='Linked') ? 'Create token' : 'Unlink' }} </button>
+            <p v-show="myToken && myToken!='Linked'">Token is valid for 5 minutes.</p>
+          </div>
         </div>
         <div class="p-4 border-b">
           <h2 class="text-2xl ">
@@ -84,7 +96,7 @@
             <a v-if="passwordInvalid" class="text-red-500">Please input a valid password</a>
           </div>
           <p class="text-gray-600">
-            
+
           </p>
           <div v-if="isEditingPassword" class="flex">
             <input v-model="newPassword" placeholder="Enter a New Password" type="password"
@@ -98,8 +110,8 @@
 </template>
 
 <script>
-import { useStore } from 'vuex'
 import { getAuth, updatePassword } from "firebase/auth";
+const axios = require("axios");
 
 export default {
   created() {
@@ -109,6 +121,7 @@ export default {
       this.userFirstName = this.userFullName[0];
       this.userLastName = this.userFullName[1];
       this.email = this.user.email;
+      this.updateLinker()
     }
     else {
       this.userFullName = "";
@@ -139,16 +152,19 @@ export default {
       newPasswordInvalid: this.newPasswordInvalid,
       isEditingPassword: this.isEditingPassword,
       password: this.password,
-      newPassword: this.newPassword
+      newPassword: this.newPassword,
+      myToken: "",
+      linker: null
     }
   },
   watch: {
-    '$store.state.user': function() {
+    '$store.state.user': function () {
       this.user = this.$store.state.user;
       this.userFullName = this.user.displayName.split(' ');
       this.userFirstName = this.userFullName[0];
       this.userLastName = this.userFullName[1];
       this.email = this.user.email;
+      this.updateLinker();
     },
     userFirstName(value) {
       this.userFirstName = value.replace(/ +/g, '');
@@ -158,6 +174,46 @@ export default {
     }
   },
   methods: {
+    updateLinker: function() {
+      axios.post(this.firebaseBase + this.apiBase + '/line-user-linker', {
+        "user_id": this.user.uid,
+      })
+      .then(resp => {
+        if (resp.data.msg === "success" && resp.data.line_user_id !== "") {
+          this.linker = {
+            firebase_user_id: resp.data.firebase_user_id,
+            line_user_id: resp.data.line_user_id
+          };
+          this.myToken = "Linked"
+        }
+      });
+    },
+    copyMyTokens: function() {
+      let token = document.querySelector('#my-token');
+      token.setAttribute('type', 'text');
+      token.select();
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        alert('Copy token ' + msg );
+      } catch (err) {
+        alert('Oops, unable to copy');
+      }
+      token.setAttribute('type', 'hidden');
+      window.getSelection().removeAllRanges();
+    },
+    createNewToken: function() {
+      axios.post(this.firebaseBase + this.apiBase + '/line-user-linker/new', {
+          "user_id": this.user.uid,
+          "force": (this.myToken == 'Linked')
+        })
+          .then(resp => {
+            this.myToken = "LINK" + resp.data.id
+          })
+          .catch(resp => {
+            console.log(resp)
+          });
+    },
     editPasswordClickedHandler: function (e) {
       this.isEditingPassword = true;
     },
@@ -215,7 +271,7 @@ export default {
       });
       console.log('dispatched')
     },
-    
+
     updatePassword: function (password, newPassword) {
       this.$store.dispatch(
         'login',
