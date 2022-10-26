@@ -3,7 +3,8 @@ FROM node:16.15.0-alpine3.15 as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-# ARG VUE_APP_FIREBASE_API_KEY
+ARG FIREBASE_API_KEY
+ENV VUE_APP_FIREBASE_API_KEY $FIREBASE_API_KEY
 COPY . .
 RUN npm run build
 
