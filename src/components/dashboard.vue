@@ -135,6 +135,29 @@
                 <p class="leading-relaxed text-gray-600">Temperature Content</p>
               </div>
             </div>
+            <!-- Valve -->
+            <div v-if="device.sensor_records.length > 0 && device.sensor_records[0].data.hasOwnProperty('sw')"
+              class="p-4 md:w-2/6 sm:w-1/2 w-full">
+              <!-- class="p-4 md:w-2/6 sm:w-1/2 w-full" :set="toggles[`${device.id}.sw`]=(device.sensor_records[0].data.sw==1)"> -->
+              <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-blue-400 px-4 py-6">
+                <div class="">
+                  <img alt="content" class="rounded-full bg-blue-400 text-white p-4 w-20 h-20 mb-3 inline-block"
+                    src="@/assets/Iot/plants.png">
+                </div>
+                <div>
+                  <button @click="swButtonHandler(device.id, 'sw')" ref="ok"
+                    class="relative inline-flex items-center h-6 rounded-full w-11 duration-200 select-none bg-gray-300"
+                    :class="toggles[`${device.id}.sw`] ? 'bg-green-500' : 'bg-gray-500'">
+                    <span class="sr-only">Enable notifications</span>
+                    <span class="inline-block w-4 h-4 transform duration-300 bg-white rounded-full translate-x-1"
+                      :class="toggles[`${device.id}.sw`] ? 'translate-x-6 ' : 'translate-x-1'"></span>
+                  </button>
+                </div>
+                <h2 class="title-font font-medium text-2xl text-gray-600">ON / OFF</h2>
+                <p class="leading-relaxed text-gray-600">Turn on/off water valve in garden.</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -162,7 +185,7 @@
             </div>
           </div> -->
           <!-- ON / OFF 2 -->
-          <div class="p-4 md:w-2/6 sm:w-1/2 w-full">
+          <!-- <div class="p-4 md:w-2/6 sm:w-1/2 w-full">
             <div class="widget w-full p-4 rounded-lg shadow-lg bg-white border-l-4 border-blue-400 px-4 py-6">
               <div class="">
                 <img alt="content" class="rounded-full bg-blue-400 text-white p-4 w-20 h-20 mb-3 inline-block"
@@ -180,7 +203,7 @@
               <h2 class="title-font font-medium text-2xl text-gray-600">ON / OFF</h2>
               <p class="leading-relaxed text-gray-600">Turn on/off water valve in garden.</p>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -378,6 +401,7 @@ export default {
     this.deletingDevice = null
     this.deletingDeviceInvalid = false
     this.devices = []
+    this.toggles = {}
 
     this.refreshDevices()
   },
@@ -396,8 +420,9 @@ export default {
       devices: this.devices,
       timer: null,
       message: 'Test',
-      toggle: true,
-      toggle2: true,
+      toggles: this.toggles,
+      // toggle: true,
+      // toggle2: true,
       pickedFilter: 'all'
     };
   },
@@ -416,6 +441,24 @@ export default {
       })
         .then(resp => {
           this.devices = resp.data.device_list;
+          for (var idx in this.devices) {
+            this.toggles[`${this.devices[idx].id}.sw`] = ('sw' in this.devices[idx].sensor_records[0].data) && (this.devices[idx].sensor_records[0].data.sw == 1);
+          }
+        });
+    },
+    swButtonHandler(deviceId, target) {
+      this.toggles[`${deviceId}.${target}`] = !this.toggles[`${deviceId}.${target}`];
+      var command = "off";
+      if (this.toggles[`${deviceId}.${target}`]) {
+        command = "on";
+      }
+      axios.post(this.firebaseBase + this.apiBase + '/sensor-record/command', {
+        "device_id": deviceId,
+        "target": target,
+        "command": command,
+      })
+        .then(resp => {
+          console.log('msg', resp.data.msg)
         });
     },
     addSensorButtonHandler() {
