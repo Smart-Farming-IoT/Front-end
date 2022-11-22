@@ -153,8 +153,8 @@
                       :class="toggles[`${device.id}.sw`] ? 'translate-x-6 ' : 'translate-x-1'"></span>
                   </button>
                 </div>
-                <h2 class="title-font font-medium text-2xl text-gray-600">ON / OFF</h2>
-                <p class="leading-relaxed text-gray-600">Turn on/off water valve in garden.</p>
+                <h2 class="title-font font-medium text-2xl text-gray-600">OFF / ON</h2>
+                <p class="leading-relaxed text-gray-600">Water valve sw of {{device.name}}</p>
               </div>
             </div>
 
